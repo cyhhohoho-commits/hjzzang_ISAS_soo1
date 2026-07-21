@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@@70 Survey Logic Builder (Production)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/cpexcel.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        textarea { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.9rem; }
+        
+        /* 탭 및 버튼 활성화 상태 클래스 */
+        .tab-active { border-bottom-width: 4px; border-color: #4f46e5; color: #312e81; font-weight: 700; background-color: #eef2ff;}
+        .case-active { border-color: #6366f1 !important; background-color: #eef2ff !important; }
+        .preset-active { background-color: #ccfbf1 !important; border-color: #14b8a6 !important; font-weight: bold; color: #0f766e !important;}
+        
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0">
+        <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            <h1 class="text-xl font-bold tracking-wide">@@70 Survey Logic Builder <span class="text-xs text-emerald-400 ml-2 border border-emerald-400 px-2 py-0.5 rounded-full">v2.4 실무용</span></h1>
+        </div>
+        <div class="text-sm text-slate-400">카테고리 분리, 주관식 CASE 2 10개 파일 다중 처리 엔진 탑재</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- Left Panel: Settings -->
+        <aside class="w-1/3 bg-white border-r border-gray-200 flex flex-col overflow-hidden shadow-sm z-10">
+            
+            <!-- 카테고리 탭 (대분류) -->
+            <div class="flex border-b border-gray-200 bg-gray-50 shrink-0">
+                <button type="button" id="tab-random" onclick="switchCategory('random')" class="flex-1 py-4 text-center text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-colors tab-active">
+                    랜덤 셀렉트 (수작업)
+                </button>
+                <button type="button" id="tab-text" onclick="switchCategory('text')" class="flex-1 py-4 text-center text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-colors">
+                    주관식 (수작업)
+                </button>
+            </div>
+
+            <!-- 내부 스크롤 영역 -->
+            <div class="flex-1 p-6 overflow-y-auto">
+                
+                <!-- ========================================== -->
+                <!-- [카테고리 1] 랜덤 셀렉트 설정 영역 -->
+                <!-- ========================================== -->
+                <div id="category-random" class="block">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        랜덤 로직 설정 (CASE)
+                    </h2>
+
+                    <!-- Random Case Selector -->
+                    <div class="space-y-3 mb-6">
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors case-active" id="lbl-random-case1" onclick="selectRandomCase('1')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="1" checked class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 1</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 다차원 교차 쿼터 할당</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-random-case2" onclick="selectRandomCase('2')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="2" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 2</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 기본 랜덤 추출 (필수 없음)</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-random-case3" onclick="selectRandomCase('3')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="3" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 3</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 다중 필수 추출 (균등 배분)</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-random-case4" onclick="selectRandomCase('4')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="4" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 4</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 필수 포함 시 MAX 가변 제어</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-random-case5" onclick="selectRandomCase('5')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="5" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 5</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 쿼터 비율 할당 (가변 목표치)</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-random-case6" onclick="selectRandomCase('6')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="randomCaseType" value="6" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                <span class="font-bold text-indigo-900">CASE 6</span>
+                                <span class="text-xs text-indigo-600 font-semibold">- 순차 배타 추출 (연쇄 다중)</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Random Dynamic Inputs -->
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                        <div id="refQBox">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">참조 문항 (예: Q17MA)</label>
+                            <input type="text" id="refQ" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div id="refQListBox" class="hidden">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">교차 참조 문항 목록 (콤마 구분)</label>
+                            <input type="text" id="refQList" class="w-full border border-gray-300 bg-white rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="예: Q1SA, Q3SA, Q4SA">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1" id="lbl-totalOpt">총 보기(집단) 수</label>
+                                <input type="number" id="totalOptions" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="예: 10">
+                            </div>
+                            <div id="maxCountBox">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">MAX 추출 수</label>
+                                <input type="number" id="maxCount" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="예: 4">
+                            </div>
+                        </div>
+                        <div id="reqBox" class="hidden">
+                            <label class="block text-sm font-semibold text-rose-600 mb-1">필수 보기 번호 <span class="text-xs text-gray-500 font-normal">(선택사항)</span></label>
+                            <p id="reqDesc" class="text-xs text-gray-500 mb-1">콤마(,)로 다중 입력 가능.</p>
+                            <input type="text" id="reqOption" class="w-full border border-rose-300 bg-rose-50 rounded p-2 text-sm focus:ring-2 focus:ring-rose-500 outline-none" placeholder="예: 8, 9">
+                        </div>
+                        <div id="elseBox" class="hidden border border-orange-200 bg-orange-50 p-3 rounded">
+                            <label class="block text-sm font-semibold text-orange-700 mb-1">예외(ELSE) 보기 자동 선택</label>
+                            <div class="flex items-center gap-4 mt-2">
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="useElse" id="useElseY" value="Y" class="w-4 h-4 text-orange-600 focus:ring-orange-500"> <span class="text-sm font-semibold text-orange-800">유 (적용)</span></label>
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="useElse" id="useElseN" value="N" class="w-4 h-4 text-gray-500" checked> <span class="text-sm text-gray-700">무 (미적용)</span></label>
+                            </div>
+                        </div>
+                        <div id="varMaxBox" class="hidden">
+                            <label class="block text-sm font-semibold text-purple-600 mb-1">가변 MAX 개수</label>
+                            <input type="number" id="maxWithReq" class="w-full border border-purple-300 bg-purple-50 rounded p-2 text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                        </div>
+                        <div id="quotaBox" class="hidden">
+                            <label class="block text-sm font-semibold text-emerald-600 mb-1">가변 목표 쿼터 설정</label>
+                            <textarea id="quotas" rows="2" class="w-full border border-emerald-300 bg-emerald-50 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="예: 1:286, 2:154"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- [카테고리 2] 주관식 설정 영역 -->
+                <!-- ========================================== -->
+                <div id="category-text" class="hidden">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        주관식 (수작업) 설정 (CASE)
+                    </h2>
+
+                    <!-- Text Case Selector -->
+                    <div class="space-y-3 mb-6">
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors case-active" id="lbl-text-case1" onclick="selectTextCase('1')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="textCaseType" value="1" checked class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                <span class="font-bold text-emerald-900">CASE 1</span>
+                                <span class="text-xs text-emerald-700 font-semibold">- 슬라이드 바 UI 변환</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-text-case2" onclick="selectTextCase('2')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="textCaseType" value="2" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                <span class="font-bold text-emerald-900">CASE 2</span>
+                                <span class="text-xs text-emerald-700 font-semibold">- 주관식 응답 품질 필터 (JS 다중)</span>
+                            </div>
+                        </label>
+                        <label class="block cursor-pointer border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors" id="lbl-text-case3" onclick="selectTextCase('3')">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="textCaseType" value="3" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                <span class="font-bold text-emerald-900">CASE 3</span>
+                                <span class="text-xs text-emerald-700 font-semibold">- 수치형 드롭다운 다중 변환 (최대 3개)</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                        
+                        <!-- [TEXT CASE 1 입력폼: 슬라이드 바] -->
+                        <div id="slideFields" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">최소값 (Min)</label>
+                                    <input type="number" id="slideMin" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="" placeholder="예: -50">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">최대값 (Max)</label>
+                                    <input type="number" id="slideMax" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="" placeholder="예: 50">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-blue-600 mb-1">좌측 텍스트 라벨 (Min)</label>
+                                <input type="text" id="slideLeftTxt" class="w-full border border-blue-200 bg-blue-50 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value="" placeholder="예: 매우 차갑다/부정적 (-50)">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-600 mb-1">중앙 텍스트 라벨 (Center)</label>
+                                <input type="text" id="slideCenterTxt" class="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-gray-500 outline-none" value="" placeholder="예: 중간/별 다른 감정 없음 (0)">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-rose-600 mb-1">우측 텍스트 라벨 (Max)</label>
+                                <input type="text" id="slideRightTxt" class="w-full border border-rose-200 bg-rose-50 rounded p-2 text-sm focus:ring-2 focus:ring-rose-500 outline-none" value="" placeholder="예: 매우 따뜻하다/긍정적 (50)">
+                            </div>
+                        </div>
+
+                        <!-- [TEXT CASE 2 입력폼: 주관식 JS 필터] -->
+                        <div id="filterFields" class="hidden space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-emerald-700 mb-2">적용할 필터 종류 선택</label>
+                                <div class="flex flex-col gap-3 p-3 bg-white border border-emerald-200 rounded-lg">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="filterType" value="bad" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" checked>
+                                        <span class="text-sm font-medium text-gray-800">불량응답 (단음절/자음/모음) <span class="text-rose-500">차단만</span></span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="filterType" value="len" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="text-sm font-medium text-gray-800">글자수 <span class="text-indigo-500">제한만</span></span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="filterType" value="both" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="text-sm font-bold text-emerald-700">불량응답 + 글자수 제한 <span class="text-emerald-600 underline">모두 적용</span></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="filterMinLenBox" class="hidden bg-indigo-50 border border-indigo-200 p-3 rounded-lg">
+                                <label class="block text-sm font-semibold text-indigo-700 mb-1">최소 글자 수 입력</label>
+                                <p class="text-xs text-gray-500 mb-2">띄어쓰기 포함하여 입력한 숫자 이상이어야 통과됩니다.</p>
+                                <input type="number" id="filterMinLen" class="w-full border border-indigo-300 rounded p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" value="" placeholder="예: 5">
+                            </div>
+                        </div>
+
+                        <!-- [TEXT CASE 3 입력폼: 드롭다운 변환] -->
+                        <div id="dropFields" class="hidden space-y-4">
+                            <!-- [NEW] 프리셋 영역 -->
+                            <div>
+                                <label class="block text-sm font-semibold text-teal-800 mb-2">드롭다운 형태 (프리셋 선택)</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="px-3 py-1.5 bg-white border border-gray-300 rounded cursor-pointer hover:bg-teal-50 text-sm transition-all" id="btn-pre-1"><input type="radio" name="dropPreset" value="1" onclick="changeDropPreset('1', true)" class="hidden"> 1개 (단일)</label>
+                                    <label class="px-3 py-1.5 bg-white border border-gray-300 rounded cursor-pointer hover:bg-teal-50 text-sm transition-all preset-active" id="btn-pre-2ym"><input type="radio" name="dropPreset" value="2_ym" onclick="changeDropPreset('2_ym', true)" class="hidden" checked> 2개 (년/월)</label>
+                                    <label class="px-3 py-1.5 bg-white border border-gray-300 rounded cursor-pointer hover:bg-teal-50 text-sm transition-all" id="btn-pre-2hm"><input type="radio" name="dropPreset" value="2_hm" onclick="changeDropPreset('2_hm', true)" class="hidden"> 2개 (시/분)</label>
+                                    <label class="px-3 py-1.5 bg-white border border-gray-300 rounded cursor-pointer hover:bg-teal-50 text-sm transition-all" id="btn-pre-3ymd"><input type="radio" name="dropPreset" value="3_ymd" onclick="changeDropPreset('3_ymd', true)" class="hidden"> 3개 (년/월/일)</label>
+                                    <label class="px-3 py-1.5 bg-white border border-gray-300 rounded cursor-pointer hover:bg-teal-50 text-sm transition-all" id="btn-pre-3hms"><input type="radio" name="dropPreset" value="3_hms" onclick="changeDropPreset('3_hms', true)" class="hidden"> 3개 (시/분/초)</label>
+                                </div>
+                            </div>
+
+                            <div id="drop1Box" class="bg-teal-50 border border-teal-200 p-3 rounded-lg space-y-2">
+                                <label class="block text-sm font-semibold text-teal-800">첫 번째 드롭다운 (TN1)</label>
+                                <div class="flex gap-2 items-center">
+                                    <input type="number" id="drop1Start" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="시작 (예: 2016)">
+                                    <span class="font-bold text-teal-700">~</span>
+                                    <input type="number" id="drop1End" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="종료 (예: 2024)">
+                                </div>
+                            </div>
+
+                            <div id="drop2Box" class="bg-teal-50 border border-teal-200 p-3 rounded-lg space-y-2">
+                                <label class="block text-sm font-semibold text-teal-800">두 번째 드롭다운 (TN2)</label>
+                                <div class="flex gap-2 items-center">
+                                    <input type="number" id="drop2Start" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="시작 (예: 1)">
+                                    <span class="font-bold text-teal-700">~</span>
+                                    <input type="number" id="drop2End" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="종료 (예: 12)">
+                                </div>
+                            </div>
+
+                            <div id="drop3Box" class="bg-teal-50 border border-teal-200 p-3 rounded-lg space-y-2 hidden">
+                                <label class="block text-sm font-semibold text-teal-800">세 번째 드롭다운 (TN3)</label>
+                                <div class="flex gap-2 items-center">
+                                    <input type="number" id="drop3Start" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="시작 (예: 1)">
+                                    <span class="font-bold text-teal-700">~</span>
+                                    <input type="number" id="drop3End" class="w-1/2 border rounded p-2 text-sm focus:ring-teal-500 outline-none" value="" placeholder="종료 (예: 31)">
+                                </div>
+                            </div>
+
+                            <!-- 환산박스는 "2개 (년/월)" 프리셋일 때만 나타나도록 설정 -->
+                            <div id="dropCalcWrap" class="bg-white border border-gray-200 p-3 rounded-lg">
+                                <label class="block text-sm font-semibold text-gray-800 mb-2">환산(개월 수) 박스 자동 계산 사용</label>
+                                <p class="text-xs text-gray-500 mb-3">TN3 입력창을 잠그고 JS로 총 개월 수를 자동 연산합니다.</p>
+                                <div class="flex items-center gap-4 mb-3">
+                                    <label class="flex items-center gap-1 cursor-pointer">
+                                        <input type="radio" name="dropCalc" id="dropCalcY" value="Y" checked class="w-4 h-4 text-emerald-600 focus:ring-emerald-500"> 
+                                        <span class="text-sm font-medium text-emerald-700">유 (사용)</span>
+                                    </label>
+                                    <label class="flex items-center gap-1 cursor-pointer">
+                                        <input type="radio" name="dropCalc" id="dropCalcN" value="N" class="w-4 h-4 text-gray-500"> 
+                                        <span class="text-sm">무 (미사용)</span>
+                                    </label>
+                                </div>
+                                <div id="dropCalcOptions" class="flex gap-2 items-center bg-gray-50 p-2 rounded border border-gray-200">
+                                    <span class="text-xs text-gray-600 font-semibold">계산 기준 시점:</span>
+                                    <input type="number" id="dropBaseYear" class="w-20 border rounded p-1 text-xs focus:ring-emerald-500 outline-none" value="" placeholder="예: 2024">
+                                    <span class="text-xs text-gray-600">년</span>
+                                    <input type="number" id="dropBaseMonth" class="w-16 border rounded p-1 text-xs focus:ring-emerald-500 outline-none" value="" placeholder="예: 8">
+                                    <span class="text-xs text-gray-600">월</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 하단 공통 Buttons -->
+            <div class="p-6 border-t border-gray-200 bg-white shrink-0 flex gap-3 z-20">
+                <button type="button" onclick="executeReset()" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-lg shadow-sm transition-all flex justify-center items-center gap-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    초기화
+                </button>
+                <!-- 마스터 빌드 버튼: 현재 카테고리에 따라 분기 처리됨 -->
+                <button type="button" onclick="masterGenerateCode()" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all flex justify-center items-center gap-2" id="btn-build">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    코드 빌드
+                </button>
+            </div>
+        </aside>
+
+        <!-- Right Panel: Workspace -->
+        <section id="rightSection" class="w-2/3 p-6 bg-slate-50 relative flex flex-col overflow-hidden">
+            
+            <!-- [A] Single File UI -->
+            <div id="singleFileUi" class="flex-1 flex flex-col gap-4">
+                <div class="flex-1 flex flex-col">
+                    <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                        <span id="inputLabelText">원본 HTM 코드 (HTML Tags)</span>
+                        <span id="fileNameDisplay" class="ml-3 text-xs font-semibold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded hidden"></span>
+                    </label>
+                    <textarea id="inputHtml" class="flex-1 w-full border border-gray-300 rounded-lg p-4 shadow-inner focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-colors duration-200" placeholder="HTM/HTML/JS 파일을 이 화면 아무 곳에나 드래그해서 놓으세요..."></textarea>
+                </div>
+
+                <div class="flex justify-center shrink-0">
+                    <div class="bg-white p-2 rounded-full shadow border border-gray-200">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex flex-col relative">
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="block text-sm font-bold text-gray-700">최종 결과물 Preview (Code)</label>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="copyToClipboard('outputHtml')" class="text-xs bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-1 px-3 rounded shadow-sm">복사하기</button>
+                            <button type="button" onclick="downloadHtm('outputHtml', originalFileName)" class="text-xs bg-slate-800 hover:bg-slate-900 text-white py-1 px-3 rounded shadow-sm flex items-center gap-1 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                다운로드
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="outputHtml" readonly class="flex-1 w-full bg-slate-900 text-green-400 border border-slate-700 rounded-lg p-4 shadow-inner outline-none resize-none" placeholder="빌드 버튼을 누르면 완성된 코드가 여기에 나타납니다."></textarea>
+                </div>
+            </div>
+
+            <!-- [B] Multi File UI (Random CASE 6 & Text CASE 2 전용) -->
+            <div id="multiFileUi" class="flex-1 flex flex-col gap-4 hidden overflow-y-auto pr-2 pb-10">
+                <div class="mb-1">
+                    <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        다중 파일 동시 작업 공간 (최대 10개)
+                    </h3>
+                    <p class="text-sm text-gray-500">여기에 여러 개의 HTM 또는 JS 파일을 한꺼번에 드래그 앤 드롭하시면 번호순으로 자동 배치됩니다.</p>
+                </div>
+                <div id="multiSlotsContainer" class="flex flex-col gap-5">
+                    <!-- JS로 10개 슬롯 동적 생성 -->
+                </div>
+            </div>
+
+            <!-- 드래그 오버 레이어 -->
+            <div id="dragOverlay" class="absolute inset-0 bg-indigo-50 bg-opacity-90 border-4 border-dashed border-indigo-400 z-50 flex justify-center items-center hidden pointer-events-none rounded-lg m-4">
+                <div class="text-center">
+                    <svg class="w-16 h-16 text-indigo-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <p class="text-xl font-bold text-indigo-700">파일을 여기에 놓아주세요</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 전역 상태 변수
+        let activeCategory = 'random'; // 'random' or 'text'
+        let currentRandomCase = '1'; // 1번을 기본값으로 수정
+        let currentTextCase = '1'; 
+        let originalFileName = ""; 
+        let multiFileNames = ["", "", "", "", "", "", "", "", "", "", ""]; // 1~10 인덱스 사용
+
+        // 멀티 슬롯 동적 생성 (최대 10개 확장)
+        const multiSlotsContainer = document.getElementById('multiSlotsContainer');
+        let multiSlotsHtml = '';
+        for(let i=1; i<=10; i++) {
+            multiSlotsHtml += `
+            <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <label class="block text-sm font-bold text-indigo-800">
+                        수작업문항_${i} 
+                        <span id="multiFileNameDisplay_${i}" class="ml-2 text-xs font-semibold text-indigo-600 bg-indigo-100 border border-indigo-200 px-2 py-0.5 rounded hidden"></span>
+                    </label>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="copyToClipboard('multiOutput_${i}')" class="text-xs bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-1 px-3 rounded shadow-sm">복사</button>
+                        <button type="button" onclick="downloadHtm('multiOutput_${i}', multiFileNames[${i}])" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-3 rounded shadow-sm flex items-center gap-1">다운로드</button>
+                    </div>
+                </div>
+                <div class="flex gap-4 h-48">
+                    <textarea id="multiInput_${i}" class="flex-1 border border-gray-300 rounded p-3 text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none" placeholder="파일 드래그 자동 매핑 또는 직접 입력..."></textarea>
+                    <textarea id="multiOutput_${i}" readonly class="flex-1 bg-slate-900 text-green-400 border border-slate-700 rounded p-3 text-xs shadow-inner outline-none resize-none" placeholder="빌드 결과..."></textarea>
+                </div>
+            </div>`;
+        }
+        multiSlotsContainer.innerHTML = multiSlotsHtml;
+
+        // JS 필터 관련
+        document.querySelectorAll('input[name="filterType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if(this.value === 'bad') {
+                    document.getElementById('filterMinLenBox').classList.add('hidden');
+                } else {
+                    document.getElementById('filterMinLenBox').classList.remove('hidden');
+                }
+            });
+        });
+
+        // 환산박스 계산 옵션 관련
+        document.querySelectorAll('input[name="dropCalc"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if(this.value === 'Y') {
+                    document.getElementById('dropCalcOptions').classList.remove('hidden');
+                } else {
+                    document.getElementById('dropCalcOptions').classList.add('hidden');
+                }
+            });
+        });
+
+        // [프리셋(Preset) 변경 로직: Text CASE 3 전용]
+        // fillData = false 시에는 UI 버튼 스타일과 영역 보이기/숨기기만 처리하고 인풋 값은 비움
+        function changeDropPreset(val, fillData = false) {
+            document.querySelectorAll('input[name="dropPreset"]').forEach(radio => {
+                const label = radio.parentElement;
+                if(radio.value === val) {
+                    label.classList.add('preset-active');
+                    radio.checked = true;
+                } else {
+                    label.classList.remove('preset-active');
+                }
+            });
+
+            // UI 보이기/숨기기 및 데이터 채우기 분기
+            if(val === '1') {
+                document.getElementById('drop2Box').classList.add('hidden');
+                document.getElementById('drop3Box').classList.add('hidden');
+                document.getElementById('dropCalcWrap').classList.add('hidden');
+            } else if(val === '2_ym') {
+                document.getElementById('drop2Box').classList.remove('hidden');
+                document.getElementById('drop3Box').classList.add('hidden');
+                document.getElementById('dropCalcWrap').classList.remove('hidden'); 
+                
+                if(fillData) {
+                    document.getElementById('drop1Start').value = '2016';
+                    document.getElementById('drop1End').value = '2024';
+                    document.getElementById('drop2Start').value = '1';
+                    document.getElementById('drop2End').value = '12';
+                }
+            } else if(val === '2_hm') {
+                document.getElementById('drop2Box').classList.remove('hidden');
+                document.getElementById('drop3Box').classList.add('hidden');
+                document.getElementById('dropCalcWrap').classList.add('hidden');
+                
+                if(fillData) {
+                    document.getElementById('drop1Start').value = '0';
+                    document.getElementById('drop1End').value = '23';
+                    document.getElementById('drop2Start').value = '0';
+                    document.getElementById('drop2End').value = '59';
+                }
+            } else if(val === '3_ymd') {
+                document.getElementById('drop2Box').classList.remove('hidden');
+                document.getElementById('drop3Box').classList.remove('hidden');
+                document.getElementById('dropCalcWrap').classList.add('hidden');
+                
+                if(fillData) {
+                    document.getElementById('drop1Start').value = '2016';
+                    document.getElementById('drop1End').value = '2024';
+                    document.getElementById('drop2Start').value = '1';
+                    document.getElementById('drop2End').value = '12';
+                    document.getElementById('drop3Start').value = '1';
+                    document.getElementById('drop3End').value = '31';
+                }
+            } else if(val === '3_hms') {
+                document.getElementById('drop2Box').classList.remove('hidden');
+                document.getElementById('drop3Box').classList.remove('hidden');
+                document.getElementById('dropCalcWrap').classList.add('hidden');
+                
+                if(fillData) {
+                    document.getElementById('drop1Start').value = '0';
+                    document.getElementById('drop1End').value = '23';
+                    document.getElementById('drop2Start').value = '0';
+                    document.getElementById('drop2End').value = '59';
+                    document.getElementById('drop3Start').value = '0';
+                    document.getElementById('drop3End').value = '59';
+                }
+            }
+        }
+
+        // [카테고리 전환 로직]
+        function switchCategory(cat) {
+            activeCategory = cat;
+            
+            document.getElementById('tab-random').classList.remove('tab-active');
+            document.getElementById('tab-text').classList.remove('tab-active');
+            document.getElementById('tab-' + cat).classList.add('tab-active');
+            
+            if(cat === 'random') {
+                document.getElementById('category-random').classList.remove('hidden');
+                document.getElementById('category-text').classList.add('hidden');
+                document.getElementById('btn-build').classList.replace('bg-emerald-600', 'bg-indigo-600');
+                document.getElementById('btn-build').classList.replace('hover:bg-emerald-700', 'hover:bg-indigo-700');
+                selectRandomCase(currentRandomCase);
+            } else {
+                document.getElementById('category-random').classList.add('hidden');
+                document.getElementById('category-text').classList.remove('hidden');
+                document.getElementById('btn-build').classList.replace('bg-indigo-600', 'bg-emerald-600');
+                document.getElementById('btn-build').classList.replace('hover:bg-indigo-700', 'hover:bg-emerald-700');
+                selectTextCase(currentTextCase);
+            }
+        }
+
+        // [랜덤 셀렉트 CASE 전환 로직]
+        function selectRandomCase(type) {
+            currentRandomCase = type;
+            document.querySelectorAll('input[name="randomCaseType"]').forEach(el => {
+                el.checked = (el.value === type);
+                document.getElementById('lbl-random-case' + el.value).classList.remove('case-active', 'border-indigo-400', 'bg-indigo-50');
+            });
+            const activeLbl = document.getElementById('lbl-random-case' + type);
+            activeLbl.classList.add('case-active');
+            if(type === '6') activeLbl.classList.add('border-indigo-400', 'bg-indigo-50');
+
+            document.getElementById('refQBox').style.display = (type === '1') ? 'none' : 'block';
+            document.getElementById('refQListBox').style.display = (type === '1') ? 'block' : 'none';
+            document.getElementById('maxCountBox').style.display = (type === '1' || type === '6') ? 'none' : 'block';
+            
+            const reqBox = document.getElementById('reqBox');
+            const reqDesc = document.getElementById('reqDesc');
+            const reqOption = document.getElementById('reqOption');
+
+            if (type === '3' || type === '4') {
+                reqBox.style.display = 'block';
+                reqDesc.innerText = '콤마(,)로 다중 입력 가능, 필수 항목 간 균등 배분됩니다.';
+                reqOption.placeholder = '예: 8, 9';
+            } else if (type === '6') {
+                reqBox.style.display = 'block';
+                reqDesc.innerText = '입력 시, 첫 번째 수작업 문항에만 적용됩니다.';
+                reqOption.placeholder = '예: 7';
+            } else {
+                reqBox.style.display = 'none';
+            }
+
+            document.getElementById('elseBox').style.display = (type === '6') ? 'block' : 'none';
+            document.getElementById('varMaxBox').style.display = (type === '4') ? 'block' : 'none';
+            document.getElementById('quotaBox').style.display = (type === '5') ? 'block' : 'none';
+            document.getElementById('lbl-totalOpt').innerText = (type === '1') ? '총 타겟 집단 수' : '총 보기 개수';
+            document.getElementById('inputLabelText').innerText = "원본 HTM 코드 (HTML Tags)";
+            document.getElementById('inputHtml').placeholder = "HTM/HTML 파일을 이 화면 아무 곳에나 드래그해서 놓으세요...";
+
+            if(type === '6') {
+                document.getElementById('singleFileUi').classList.add('hidden');
+                document.getElementById('multiFileUi').classList.remove('hidden');
+            } else {
+                document.getElementById('multiFileUi').classList.add('hidden');
+                document.getElementById('singleFileUi').classList.remove('hidden');
+            }
+        }
+
+        // [주관식 CASE 전환 로직]
+        function selectTextCase(type) {
+            currentTextCase = type;
+            document.querySelectorAll('input[name="textCaseType"]').forEach(el => {
+                el.checked = (el.value === type);
+                document.getElementById('lbl-text-case' + el.value).classList.remove('case-active', 'border-emerald-400', 'bg-emerald-50');
+            });
+            const activeLbl = document.getElementById('lbl-text-case' + type);
+            activeLbl.classList.add('case-active');
+
+            // 블록 초기화
+            document.getElementById('slideFields').classList.add('hidden');
+            document.getElementById('filterFields').classList.add('hidden');
+            document.getElementById('dropFields').classList.add('hidden');
+
+            if(type === '1') {
+                document.getElementById('slideFields').classList.remove('hidden');
+                document.getElementById('inputLabelText').innerText = "원본 HTM 코드 (HTML Tags)";
+                document.getElementById('inputHtml').placeholder = "HTM/HTML 파일을 이 화면 아무 곳에나 드래그해서 놓으세요...";
+                document.getElementById('multiFileUi').classList.add('hidden');
+                document.getElementById('singleFileUi').classList.remove('hidden');
+            } else if (type === '2') {
+                document.getElementById('filterFields').classList.remove('hidden');
+                // CASE 2는 다중 처리 지원
+                document.getElementById('singleFileUi').classList.add('hidden');
+                document.getElementById('multiFileUi').classList.remove('hidden');
+            } else if (type === '3') {
+                document.getElementById('dropFields').classList.remove('hidden');
+                document.getElementById('inputLabelText').innerText = "원본 HTM 코드 (HTML Tags)";
+                document.getElementById('inputHtml').placeholder = "HTM/HTML 파일을 이 화면 아무 곳에나 드래그해서 놓으세요...";
+                document.getElementById('multiFileUi').classList.add('hidden');
+                document.getElementById('singleFileUi').classList.remove('hidden');
+            }
+        }
+
+        // 초기 로드 시 1번 활성화 및 데이터 비우기 모드로 UI 세팅
+        selectRandomCase('1');
+        changeDropPreset('2_ym', false); 
+
+        // [마스터 빌드 분기 컨트롤러]
+        function masterGenerateCode() {
+            if(activeCategory === 'random') {
+                generateRandomCode();
+            } else if(activeCategory === 'text') {
+                generateTextCode();
+            }
+        }
+
+        // ===============================================================
+        // [엔진 2] 주관식(수작업) 코드 생성기 (ASP / JS_Load 절대 생성 안함)
+        // ===============================================================
+        function generateTextCode() {
+            try {
+                if (currentTextCase === '1') {
+                    // [CASE 1: 슬라이드 바 HTML 생성]
+                    let code = document.getElementById('inputHtml').value;
+                    if (!code.trim()) { alert('원본 코드를 입력해주세요!'); return false; }
+
+                    const sMin = document.getElementById('slideMin').value || "-50";
+                    const sMax = document.getElementById('slideMax').value || "50";
+                    const sLeftTxt = document.getElementById('slideLeftTxt').value || "매우 차갑다/부정적 (-50)";
+                    const sCenterTxt = document.getElementById('slideCenterTxt').value || "중간/별 다른 감정 없음 (0)";
+                    const sRightTxt = document.getElementById('slideRightTxt').value || "매우 따뜻하다/긍정적 (50)";
+
+                    const nameMatch = code.match(/name="([A-Z0-9]+)TS1"/i) || code.match(/name="([A-Z0-9]+)"/i);
+                    if (!nameMatch) {
+                        alert("원본 HTML에서 수치형 문항 ID를 찾을 수 없습니다.");
+                        return false;
+                    }
+                    const baseQ = nameMatch[1]; 
+                    const targetQ = baseQ.endsWith('TS1') ? baseQ : baseQ + "TS1"; 
+
+                    const cssBlock = `<style>\n/* 트랙 */\ninput[type=range]{\n    -webkit-appearance:none;\n    appearance:none;\n    width:95%;\n    background:transparent;\n}\n/* Chrome */\ninput[type=range]::-webkit-slider-runnable-track{\n    height:6px;\n    background:#d9d9d9;\n    border-radius:3px;\n}\n/* 손잡이 */\ninput[type=range]::-webkit-slider-thumb{\n    -webkit-appearance:none;\n    width:18px;\n    height:18px;\n    margin-top:-6px;\n    background:#1a73e8;\n    border-radius:50%;\n    border:none;\n}\n/* Firefox */\ninput[type=range]::-moz-range-track{\n    height:6px;\n    background:#d9d9d9;\n}\ninput[type=range]::-moz-range-progress{\n    background:#d9d9d9; \n}\ninput[type=range]::-moz-range-thumb{\n    width:18px;\n    height:18px;\n    border:none;\n    border-radius:50%;\n    background:#1a73e8;\n}\n</style>\n`;
+                    code = cssBlock + code;
+
+                    const tableRegex = new RegExp(`(<table[^>]*id="${baseQ.replace('TS1','')}CS"[\\s\\S]*?<\\/table>)`, 'i');
+                    code = code.replace(tableRegex, `\n\t<!--\n    $1\n\t-->\n`);
+
+                    const slideUiBlock = `\t<table id="embHandTable45" settype="r:1-1" border="0" cellpadding="4" width="100%" bordercolorlight="#8da6a9" bordercolordark="#ffffff" data-oqd-dom="case" data-oqd-qtype="FREE" cellspacing="0">\n\t<tr>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> ${sLeftTxt.replace(/\n/g, '<br>')}</td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> ${sCenterTxt.replace(/\n/g, '<br>')}</td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> </td>\n\t\t<td style="text-align:center" valign="bottom" align="center" width="7.7%"> ${sRightTxt.replace(/\n/g, '<br>')}</td>\n\t</tr>\n\t\t<tr>\n\t\t\t<td colspan="11" style='text-align:center;padding:10px'>\n\t\t\t\t  <font><input type="range" id="${targetQ}" name="${targetQ}" min="${sMin}" max="${sMax}" step="1" value="0" style="width:95%;"></font>\n\t\t\t\t <font> <div align="center" id="${targetQ}_txt"><span style="color:blue;">0</span> </div></font>\n\t\t\t</td>\n\t\t</tr>\n\t</table>\n\t<Br>\n\t<input type="hidden" name="a" value="">\n`;
+                    code = code.replace(/\t<!--\n    <table/i, slideUiBlock + `\t<!--\n    <table`);
+
+                    const jsBlock = `<script type="text/ecmascript" src="//code.jquery.com/jquery-1.12.3.min.js"><` + `/script> \n<script language="javascript">\nfunction commaFormat(number) {\n\tdocument.all.a.value="1";\n    return number.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");\n}\n/* changes the value of the range when dragged */\n$('#${targetQ}').on('input', function() {\n\t$('#${targetQ}_txt span').text(commaFormat($(this).val()));\n});\n<` + `/script>\n`;
+                    code = code + "\n" + jsBlock;
+                    
+                    document.getElementById('outputHtml').value = code;
+
+                } else if (currentTextCase === '2') {
+                    // [CASE 2: JS 주관식 응답 품질 필터 다중 10개 처리 엔진]
+                    const filterType = document.querySelector('input[name="filterType"]:checked').value;
+                    const minLen = document.getElementById('filterMinLen').value || 5; 
+                    
+                    let processedCount = 0;
+
+                    for(let j=1; j<=10; j++) {
+                        let code = document.getElementById(`multiInput_${j}`).value.trim();
+                        if(!code) {
+                            document.getElementById(`multiOutput_${j}`).value = "";
+                            continue;
+                        }
+                        processedCount++;
+
+                        const regex = /Q\d{1,4}T[SAL]\d{1,4}/g;
+                        let matches = code.match(regex);
+                        let targets = [];
+                        if(matches) {
+                            targets = [...new Set(matches)]; 
+                        }
+
+                        if(targets.length === 0) {
+                            alert(`[수작업문항_${j}] JS 코드 내에서 문항 ID(예: Q20TS1, Q4TL1 등)를 찾을 수 없습니다. 원본이 올바른지 확인해주세요.`);
+                            continue;
+                        }
+
+                        let interceptor = `\r\n// --- [@@70 응답 품질 필터링 자동화 로직] ---\r\n`;
+                        interceptor += `var targets = ${JSON.stringify(targets)};\r\n`;
+                        interceptor += `for(var k = 0; k < targets.length; k++) {\r\n`;
+                        interceptor += `    var obj = document.all[targets[k]] || document.getElementsByName(targets[k])[0];\r\n`;
+                        interceptor += `    if(!obj) continue;\r\n`;
+                        interceptor += `    var txt = obj.value.replace(/^\\s+|\\s+$/g, '');\r\n`;
+                        interceptor += `    if(txt != '') {\r\n`;
+
+                        if (filterType === 'bad' || filterType === 'both') {
+                            interceptor += `        if(txt.length == 1 || /^[ㄱ-ㅎㅏ-ㅣ]+$/.test(txt)) {\r\n`;
+                            interceptor += `            alert('응답을 확인해주세요 (자음/모음 도배 및 단음절 입력 불가)');\r\n`;
+                            interceptor += `            obj.focus();\r\n`;
+                            interceptor += `            return false;\r\n`;
+                            interceptor += `        }\r\n`;
+                        }
+
+                        if (filterType === 'len' || filterType === 'both') {
+                            interceptor += `        if(txt.length < ${minLen}) {\r\n`;
+                            interceptor += `            alert('최소 ${minLen}자 이상 입력해 주십시오');\r\n`;
+                            interceptor += `            obj.focus();\r\n`;
+                            interceptor += `            return false;\r\n`;
+                            interceptor += `        }\r\n`;
+                        }
+
+                        interceptor += `    }\r\n`;
+                        interceptor += `}\r\n// ------------------------------------------\r\n\r\n`;
+
+                        if(code.includes("TxtFn")) {
+                            code = code.replace(/(if\s*\(!TxtFn)/, interceptor + "$1");
+                        } else {
+                            code = interceptor + code;
+                        }
+
+                        document.getElementById(`multiOutput_${j}`).value = code;
+                    }
+
+                    if(processedCount === 0) {
+                        alert("작업할 원본 코드를 넣어주세요.");
+                        return false;
+                    }
+
+                } else if (currentTextCase === '3') {
+                    // [CASE 3: 다중 수치형 드롭다운 변환 엔진 (최대 3개)]
+                    let code = document.getElementById('inputHtml').value;
+                    if (!code.trim()) { alert('원본 코드를 입력해주세요!'); return false; }
+
+                    const preset = document.querySelector('input[name="dropPreset"]:checked').value;
+                    let dropCount = 1;
+                    if (preset.startsWith('2')) dropCount = 2;
+                    if (preset.startsWith('3')) dropCount = 3;
+                    
+                    const calcEnabled = (dropCount === 2 && preset === '2_ym' && document.getElementById('dropCalcY').checked);
+                    const baseYear = document.getElementById('dropBaseYear').value || "2024";
+                    const baseMonth = document.getElementById('dropBaseMonth').value || "8";
+
+                    // 원본에서 TN1 ID 파싱
+                    const baseMatch = code.match(/id="([A-Z0-9_]+TN)1"/i);
+                    if (!baseMatch) {
+                        alert("원본 HTML에서 첫 번째 수치형 문항(예: TN1)을 찾을 수 없습니다.");
+                        return false;
+                    }
+                    const baseId = baseMatch[1]; 
+
+                    // 루프: 지정된 드롭다운 개수만큼 치환
+                    for(let i=1; i<=dropCount; i++) {
+                        let defaultStart = i===1 ? "2016" : "1";
+                        let defaultEnd = i===1 ? "2024" : "12";
+                        if (preset === '2_hm' || preset === '3_hms') {
+                            defaultStart = "0";
+                            defaultEnd = i===1 ? "23" : "59";
+                        }
+                        if (preset === '3_ymd' && i === 3) defaultEnd = "31";
+
+                        let dStart = document.getElementById(`drop${i}Start`).value || defaultStart;
+                        let dEnd = document.getElementById(`drop${i}End`).value || defaultEnd;
+                        
+                        let onChangeAttr = (calcEnabled && i <= 2) ? 'onchange="chk1()"' : '';
+                        
+                        let tnRegex = new RegExp(`(<input[^>]+id="${baseId}${i}"[^>]*>)`, "i");
+                        let tnSelect = `<!-- $1 -->\n\t\t  <select id="${baseId}${i}" name="${baseId}${i}" ${onChangeAttr}>\n\t\t\t<option value="" selected>:::선택:::</option>\n\t\t\t<% For i=${dStart} To ${dEnd} %>\n\t\t\t<option value="<%=i%>"><%=i%></option>\n\t\t\t<% Next %>\n\t\t  </select>`;
+                        
+                        if(code.match(tnRegex)) {
+                            code = code.replace(tnRegex, tnSelect);
+                        } else {
+                            console.warn(`${baseId}${i} 를 찾지 못했습니다.`);
+                        }
+                    }
+
+                    // 환산 로직 스크립트 추가
+                    if (calcEnabled) {
+                        let tn3Regex = new RegExp(`(<input[^>]+id="${baseId}3"[^>]*>)`, "i");
+                        if(code.match(tn3Regex)) {
+                            code = code.replace(tn3Regex, (match) => {
+                                let res = match.replace(/autocomplete="off"/i, '');
+                                if (res.match(/style="([^"]*)"/i)) {
+                                    res = res.replace(/style="([^"]*)"/i, (m, p1) => `style="${p1}${p1.endsWith(';')?'':';'}border:0"`);
+                                } else {
+                                    res = res.replace(/<input/i, '<input style="border:0"');
+                                }
+                                if(!res.includes('readonly')) {
+                                    res = res.replace(/\s*\/?>(?!.*>)/, ' readonly />');
+                                }
+                                return res;
+                            });
+                        }
+
+                        let scriptBlock = `\n<script>\n\tfunction chk1(){\n\t\tvar reg = /\\s+/g;\n\t\tvar chkStr1 = document.all.${baseId}1;\n\t\tvar str = chkStr1 ? chkStr1.value : "";\n\t\tvar str1 = str.replace(reg,'');\n\n\t\tvar chkStr2 = document.all.${baseId}2;\n\t\tstr = chkStr2 ? chkStr2.value : "";\n\t\tvar str2 = str.replace(reg,'');\n\n\t\tvar chkStr = document.all.${baseId}3;\n\t\t\n\t\tif (str1 != "" && str2 != "")\n\t\t{\n\t\t\tif (Number(str1)==${baseYear} && Number(str2)>${baseMonth} )\n\t\t\t{\n\t\t\t\tif(chkStr2) chkStr2.value="";\n\t\t\t\tif(chkStr) chkStr.value="";\n\t\t\t}else{\n\t\t\t\tvar totmth = ((${baseYear}-Number(str1))*12)+(${baseMonth}-Number(str2));\n\t\t\t\tif(chkStr) chkStr.value=totmth;\n\t\t\t}\n\t\t}else{\n\t\t\tif(chkStr) chkStr.value="";\n\t\t}\n\t}\n<` + `/script>\n`;
+                        code += scriptBlock;
+                    }
+                    
+                    document.getElementById('outputHtml').value = code;
+                }
+
+                return true;
+
+            } catch(err) {
+                alert("코드 빌드 중 오류가 발생했습니다: " + err.message);
+                return false;
+            }
+        }
+
+
+        // ===============================================================
+        // [엔진 1] 기존 랜덤 셀렉트 코드 생성기 
+        // ===============================================================
+        function generateRandomCode() {
+            try {
+                const maxCount = parseInt(document.getElementById('maxCount').value) || 1;
+                let maxOpt = parseInt(document.getElementById('totalOptions').value) || 0;
+                const reqOptionStr = document.getElementById('reqOption').value.trim();
+                const reqOptions = reqOptionStr.split(',').map(s => s.trim()).filter(s => s !== '' && !isNaN(s));
+                const maxWithReq = parseInt(document.getElementById('maxWithReq').value) || maxCount;
+                const quotas = document.getElementById('quotas').value;
+                const useElse = document.getElementById('useElseY').checked;
+
+                if (currentRandomCase === '6') {
+                    const refQ = document.getElementById('refQ').value.trim();
+                    if (!refQ) {
+                        alert("참조 문항(예: Q17MA)을 입력해주세요.");
+                        return false;
+                    }
+                    
+                    let autoExcQs = []; 
+                    let isFirstValid = true;
+                    let processedCount = 0;
+
+                    for(let j=1; j<=10; j++) {
+                        const html = document.getElementById(`multiInput_${j}`).value.trim();
+                        if(!html) {
+                            document.getElementById(`multiOutput_${j}`).value = "";
+                            continue;
+                        }
+                        processedCount++;
+
+                        const nameMatch = html.match(/name="([A-Z0-9_-]+)"/i);
+                        const curQ = nameMatch ? nameMatch[1] : `Q_CURRENT_${j}`;
+
+                        let localMaxOpt = maxOpt;
+                        const valMatches = [];
+                        const regex = /value="(\d+)"/g;
+                        let matchItem;
+                        while ((matchItem = regex.exec(html)) !== null) valMatches.push(parseInt(matchItem[1]));
+                        if (valMatches.length > 0) localMaxOpt = Math.max(localMaxOpt, Math.max(...valMatches));
+                        if (localMaxOpt === 0) localMaxOpt = 10;
+
+                        let asp = `<!-- #include virtual="/include/i_db.asp"-->\r\n<%\r\n`;
+                        asp += `' [환경 설정]\r\nTxtMode = request("TxtMode")\r\nTxtSurveyID = request("TxtSurveyID")\r\n\r\n`;
+                        asp += `if TxtMode <> "" then\r\n\ttblName = "tmRespondanswer"\r\n\ttblValue = "tmRespondent"\r\nelse\r\n\ttblName = "emRespondanswer" \r\n\ttblValue = "[EMCS-DB].SURVEYINFO.dbo.emRespondent" \r\nend if\r\n\r\n`;
+                        
+                        asp += `' [배열 초기화]\r\nDim chkArr(${localMaxOpt}), okCnt(${localMaxOpt})\r\n`;
+                        asp += `For i = 1 To ${localMaxOpt}\r\n\tchkArr(i) = "0"\r\n\tokCnt(i) = 0\r\nNext \r\n\r\n`;
+
+                        asp += `' 1. 최상단 참조 문항(${refQ}) 응답값 확인 및 배열 등록\r\n`;
+                        asp += `sql_f = "SELECT AnsValue FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND " & _\r\n`;
+                        asp += `\t\t" panelid = '" & request("TxtPanelID") & "' and ANSNO = '${refQ}' "\r\n`;
+                        asp += `Set rs_f = Server.CreateObject("ADODB.Recordset")\r\nrs_f.open sql_f, i_db,1,3\r\n\r\n`;
+                        asp += `If Not rs_f.EOF Then\r\n\trefVal = rs_f("AnsValue")\r\n\tIf Not IsNull(refVal) Then\r\n\t\tFor i = 1 To ${localMaxOpt}\r\n\t\t\tIf Len(refVal) >= i Then\r\n\t\t\t\tIf Mid(refVal, i, 1) = "1" Then chkArr(i) = "1"\r\n\t\t\tEnd If\r\n\t\tNext\r\n\tEnd If\r\nEnd If\r\nSet rs_f = Nothing\r\n\r\n`;
+
+                        if (autoExcQs.length > 0) {
+                            asp += `' 2. 연쇄 로직: 앞서 배정된 이전 수작업 문항들 배제 처리\r\n`;
+                            autoExcQs.forEach((eq, idx) => {
+                                asp += `sql_e${idx} = "SELECT AnsValue FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND panelid = '" & request("TxtPanelID") & "' and ANSNO = '${eq}' "\r\n`;
+                                asp += `Set rs_e${idx} = Server.CreateObject("ADODB.Recordset")\r\nrs_e${idx}.open sql_e${idx}, i_db,1,3\r\n`;
+                                asp += `If Not rs_e${idx}.EOF Then\r\n\texcVal = rs_e${idx}("AnsValue")\r\n\tIf Not IsNull(excVal) And excVal <> "" Then\r\n\t\tIf IsNumeric(excVal) Then\r\n\t\t\te_idx = Int(excVal)\r\n\t\t\tIf e_idx > 0 And e_idx <= ${localMaxOpt} Then chkArr(e_idx) = "0"\r\n\t\tEnd If\r\n\tEnd If\r\nEnd If\r\nSet rs_e${idx} = Nothing\r\n\r\n`;
+                            });
+                        }
+
+                        asp += `' 3. 현재 완료 응답 카운팅 (${curQ})\r\n`;
+                        asp += `sql_f = "SELECT AnsValue, count(*) as cnt FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND " & _\r\n`;
+                        asp += `\t\t" panelid in ( select panelid from " & tblValue & " where SurveyID = '" & TxtSurveyID & "' and exitdetailcode = '001' ) " & _\r\n`;
+                        asp += `\t\t" and ANSNO = '${curQ}' group by AnsValue ORDER BY AnsValue "\r\n\r\n`;
+                        asp += `Set rs_f2 = Server.CreateObject("ADODB.Recordset")\r\nrs_f2.open sql_f, i_db,1,3\r\n\r\n`;
+                        asp += `If Not rs_f2.eof Then \r\n\tDo While Not rs_f2.EOF\r\n\t\tIf IsNumeric(rs_f2("AnsValue")) Then\r\n\t\t\tv_idx = Int(rs_f2("AnsValue"))\r\n\t\t\tIf v_idx <= ${localMaxOpt} Then okCnt(v_idx) = rs_f2("cnt")\r\n\t\tEnd If\r\n\trs_f2.movenext()\r\n\tLoop \r\nEnd If \r\nSet rs_f2 = Nothing\r\n\r\n`;
+
+                        asp += `' 4. 유니온 쿼리 생성\r\nsqlF = ""\r\n`;
+                        asp += `For i = 1 To ${localMaxOpt}\r\n\tIf chkArr(i) = "1" Then \r\n`;
+                        asp += `\t\tv_okCnt = okCnt(i)\r\n\r\n`;
+
+                        if (isFirstValid && reqOptions.length > 0) {
+                            const condition = reqOptions.map(opt => `i = ${opt}`).join(' Or ');
+                            asp += `\t\t' 첫 문항 필수 항목 가중치 고정 연산\r\n`;
+                            asp += `\t\tIf ${condition} Then \r\n`;
+                            asp += `\t\t\tv_okCnt = v_okCnt - 999999\r\n`;
+                            asp += `\t\tEnd If\r\n\r\n`;
+                        }
+
+                        asp += `\t\tIf sqlF = "" Then \r\n\t\t\tsqlF = " select " & i & " as gubun , " & v_okCnt & " as okCnt "\r\n\t\tElse \r\n\t\t\tsqlF = sqlF & " union all select " & i & " as gubun , " & v_okCnt & " as okCnt "\r\n\t\tEnd If \r\n`;
+                        asp += `\tEnd If \r\nNext \r\n\r\n`;
+
+                        asp += `' 5. 최종 선택 정렬 (MAX 1개 고정 추출)\r\n`;
+                        asp += `rndNum = ""\r\nIf sqlF <> "" Then \r\n`;
+                        asp += `\tsql = " select top 1 a.gubun from ( " & sqlF & " ) as a order by a.okCnt ASC, newid() "\r\n`;
+                        asp += `\tSet rs_f3 = Server.CreateObject("ADODB.Recordset")\r\n\trs_f3.open sql, i_db,1,3\r\n\tIf Not rs_f3.eof Then rndNum = CStr(rs_f3(0))\r\n\tSet rs_f3 = Nothing\r\nEnd If \r\n`;
+                        
+                        if (useElse) {
+                            asp += `\r\n' [예외 자동 선택 로직] 할당할 보기가 없을 경우 마지막 보기(${localMaxOpt}번) 강제 선택\r\n`;
+                            asp += `If rndNum = "" Then rndNum = CStr(${localMaxOpt})\r\n`;
+                        }
+                        
+                        asp += `%>\r\n\r\n`;
+
+                        let modifiedHtml = html.replace(/(<input[^>]+type="(?:checkbox|radio)"[^>]*value="(\d+)"[^>]*?)(\/?>)/gi, (match, prefix, valueStr, suffix) => {
+                            if(!prefix.includes("<% If rndNum")) {
+                                return `${prefix} <% If rndNum="${valueStr}" Then %>checked<% End If %> ${suffix}`;
+                            }
+                            return match;
+                        });
+
+                        if (!modifiedHtml.includes("id = JS_load") && !modifiedHtml.includes('id="JS_load"')) {
+                            modifiedHtml += `\r\n\r\n<DIV id = JS_load return = "true">\r\ndocument.all["smtBtn"].click();\r\n</DIV>`;
+                        }
+
+                        document.getElementById(`multiOutput_${j}`).value = asp + modifiedHtml;
+                        autoExcQs.push(curQ);
+                        isFirstValid = false;
+                    }
+
+                    if(processedCount === 0) {
+                        alert("작업할 원본 코드를 넣어주세요.");
+                        return false;
+                    }
+                    return true;
+                }
+
+                // 단일 CASE 1~5
+                const html = document.getElementById('inputHtml').value.trim();
+                if (!html) {
+                    alert('원본 HTM 코드를 입력해주세요!');
+                    return false; 
+                }
+
+                const nameMatch = html.match(/name="([A-Z0-9_-]+)"/i);
+                const curQ = nameMatch ? nameMatch[1] : "Q_CURRENT";
+
+                const valMatches = [];
+                const regex = /value="(\d+)"/g;
+                let matchItem;
+                while ((matchItem = regex.exec(html)) !== null) valMatches.push(parseInt(matchItem[1]));
+                if (valMatches.length > 0) maxOpt = Math.max(maxOpt, Math.max(...valMatches));
+                if (maxOpt === 0) maxOpt = 10;
+
+                let asp = `<!-- #include virtual="/include/i_db.asp"-->\r\n<%\r\n`;
+                asp += `' [환경 설정]\r\nTxtMode = request("TxtMode")\r\nTxtSurveyID = request("TxtSurveyID")\r\n\r\n`;
+                asp += `if TxtMode <> "" then\r\n\ttblName = "tmRespondanswer"\r\n\ttblValue = "tmRespondent"\r\nelse\r\n\ttblName = "emRespondanswer" \r\n\ttblValue = "[EMCS-DB].SURVEYINFO.dbo.emRespondent" \r\nend if\r\n\r\n`;
+
+                if (currentRandomCase === '1') {
+                    const refListStr = document.getElementById('refQList').value || 'Q1SA, Q3SA, Q4SA';
+                    const refs = refListStr.split(',').map(s => s.trim()).filter(s => s);
+                    const rLen = refs.length;
+
+                    asp += `Dim a1(${rLen}), a1No(${rLen})\r\n`;
+                    for(let k=0; k<rLen; k++){
+                        asp += `'#############  (${k+1}. 쿼터 :: ${refs[k]})  #######################\r\n`;
+                        asp += `sql_f${k+1} = "SELECT AnsValue FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND " & _\r\n`;
+                        asp += `\t\t" panelid = '" & request("TxtPanelID") & "' and ANSNO  = '${refs[k]}' "\r\n`;
+                        asp += `Set rs_f${k+1} = Server.CreateObject("ADODB.Recordset")\r\nrs_f${k+1}.open sql_f${k+1}, i_db,1,3\r\n\r\n`;
+                        asp += `If Not(rs_f${k+1}.Eof Or rs_f${k+1}.Bof) Then\r\n`;
+                        asp += `\ta1No(${k+1})="${refs[k]}"\r\n`;
+                        asp += `\ta1(${k+1}) = rs_f${k+1}("AnsValue")\r\n`;
+                        asp += `Else\r\n`;
+                        asp += `\ta1(${k+1}) = 0\r\n`;
+                        asp += `End If\r\n\r\n`;
+                    }
+
+                    let preValStr = "";
+                    for(let i=1; i<=maxOpt; i++) preValStr += "@" + i;
+                    
+                    asp += `'############# 집단 1~${maxOpt} 다차원 쿼터 할당 연산 #######################\r\n`;
+                    asp += `preVal="${preValStr}" ' 타겟 집단 배열\r\n`;
+                    asp += `spl_Val=Split(preVal,"@")\r\n\r\n`;
+                    asp += `qcnt=27 '오버쿼터 임계치\r\nADDSQL = ""\r\n\r\n`;
+                    asp += `m = 1\r\nFor i=1 To UBound(spl_Val)\r\n`;
+                    asp += `\tIf  m > 1 Then\r\n\t\tADDSQL = ADDSQL & " UNION ALL "\r\n\tEnd If\r\n\r\n`;
+                    asp += `\tADDSQL = ADDSQL & " SELECT '"&spl_Val(i)&"' as randomValue, count(*) as 'AnsCnt' , '"&qcnt&"' as qcnt  from "&tblValue&" as a "\r\n`;
+                    asp += `\tADDSQL = ADDSQL & " inner join ( select * from "&tblName&" where surveyid='"&TxtSurveyID&"' and AnsNo= '${curQ}' and AnsValue='"&spl_Val(i)&"' ) as b on (a.panelid=b.panelid) "\r\n`;
+
+                    const aliasArr = ['c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
+                    for(let k=0; k<rLen; k++){
+                        let alias = aliasArr[k % aliasArr.length];
+                        asp += `\tADDSQL = ADDSQL & " inner join ( select * from "&tblName&" where surveyid='"&TxtSurveyID&"' and AnsNo= '"&a1No(${k+1})&"' and AnsValue='"&a1(${k+1})&"' ) as ${alias} on (a.panelid=${alias}.panelid) "\r\n`;
+                    }
+
+                    asp += `\tADDSQL = ADDSQL & " where a.surveyid='"&TxtSurveyID&"' AND a.[ExitDetailCode] = '001' "\r\n\r\n`;
+                    asp += `\tm = m + 1\r\nNext\r\n\r\n`;
+
+                    asp += `sql_f3 = "SELECT top 1 randomValue  FROM ("& ADDSQL &") as a order by AnsCnt, newid()"\r\n`;
+                    asp += `Set rs_f2 = Server.CreateObject("ADODB.Recordset")\r\nrs_f2.open sql_f3, i_db,1,3\r\n\r\n`;
+                    asp += `rndNum = ""\r\nIf Not(rs_f2.Eof Or rs_f2.Bof) Then\r\n\trndNum = rs_f2("randomValue")\r\nEnd If\r\nSet rs_f2 = Nothing\r\n%>\r\n\r\n`;
+                } 
+                else {
+                    const refQ = document.getElementById('refQ').value.trim() || 'Q_REF';
+
+                    if(currentRandomCase === '5') {
+                        asp += `' [배열 및 가변 쿼터 설정]\r\nDim targetCnt(${maxOpt})\r\n`;
+                        const qPairs = quotas.split(',');
+                        qPairs.forEach(pair => {
+                            const parts = pair.split(':');
+                            if(parts.length === 2) {
+                                asp += `targetCnt(${parts[0].trim()}) = ${parts[1].trim()}\r\n`;
+                            }
+                        });
+                        asp += `\r\n`;
+                    }
+
+                    asp += `' [배열 초기화]\r\nDim chkArr(${maxOpt})\r\nDim chkFlg(${maxOpt})\r\nDim okCnt(${maxOpt})\r\n\r\n`;
+                    asp += `For i = 1 To ${maxOpt}\r\n\tchkArr(i) = "0"\r\n\tokCnt(i) = 0\r\n\tchkFlg(i) = ""\r\nNext \r\n\r\n`;
+
+                    asp += `' 1. 이전 문항(${refQ}) 응답값 확인\r\n`;
+                    asp += `sql_f = "SELECT ANSNO, AnsValue FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND " & _\r\n`;
+                    asp += `\t\t" panelid = '" & request("TxtPanelID") & "' and ANSNO in ('${refQ}') ORDER BY ANSNO "\r\n\r\n`;
+                    asp += `Set rs_f = Server.CreateObject("ADODB.Recordset")\r\nrs_f.open sql_f, i_db,1,3\r\n\r\n`;
+                    asp += `${refQ} = ""\r\nDo While Not rs_f.EOF\r\n\tif rs_f("ANSNO") = "${refQ}" then ${refQ} = rs_f("AnsValue")\r\nrs_f.movenext()\r\nLoop\r\nSet rs_f = Nothing\r\n\r\n`;
+
+                    asp += `' 2. ${refQ} 응답 배열 처리\r\nIf ${refQ} <> "" Then\r\n\tFor i = 1 To ${maxOpt}\r\n\t\tIf Len(${refQ}) >= i Then\r\n\t\t\tIf Mid(${refQ}, i, 1) = "1" Then\r\n\t\t\t\tchkArr(i) = "1"\r\n\t\t\tEnd If\r\n\t\tEnd If\r\n\tNext\r\nEnd If\r\n\r\n`;
+
+                    asp += `' 3. 현재 완료 응답 카운팅 (${curQ})\r\n`;
+                    asp += `sql_f = "SELECT AnsValue, count(*) as cnt FROM " & tblName & " WHERE SurveyID = '" & TxtSurveyID & "' AND " & _\r\n`;
+                    asp += `\t\t" panelid in ( select panelid from " & tblValue & " where SurveyID = '" & TxtSurveyID & "' and exitdetailcode = '001' ) " & _\r\n`;
+                    asp += `\t\t" and ANSNO in ('${curQ}') group by AnsValue ORDER BY AnsValue "\r\n\r\n`;
+                    asp += `Set rs_f2 = Server.CreateObject("ADODB.Recordset")\r\nrs_f2.open sql_f, i_db,1,3\r\n\r\n`;
+                    asp += `If Not rs_f2.eof Then \r\n\tDo While Not rs_f2.EOF\r\n\t\tIf IsNumeric(rs_f2("AnsValue")) Then\r\n\t\t\tv_idx = Int(rs_f2("AnsValue"))\r\n\t\t\tIf v_idx <= ${maxOpt} Then okCnt(v_idx) = rs_f2("cnt")\r\n\t\tEnd If\r\n\trs_f2.movenext()\r\n\tLoop \r\nEnd If \r\nSet rs_f2 = Nothing\r\n\r\n`;
+
+                    asp += `' 4. 유니온 쿼리 생성\r\nsqlF = ""\r\n`;
+                    
+                    if(currentRandomCase === '4') {
+                        asp += `Dim hasRequired, topCount\r\nhasRequired = False\r\n\r\n`;
+                    }
+
+                    asp += `For i = 1 To ${maxOpt}\r\n\tIf chkArr(i) = "1" Then \r\n`;
+
+                    if(currentRandomCase === '5') {
+                        asp += `\t\t' 가변 쿼터 충족률(%) 연산\r\n\t\tDim v_Rate\r\n\t\tIf targetCnt(i) > 0 Then\r\n\t\t\tv_Rate = (okCnt(i) * 1.0) / targetCnt(i)\r\n\t\tElse\r\n\t\t\tv_Rate = 0\r\n\t\tEnd If\r\n\r\n`;
+                    } else {
+                        asp += `\t\tv_okCnt = okCnt(i)\r\n\r\n`;
+                    }
+
+                    if(currentRandomCase === '3' || currentRandomCase === '4') {
+                        if (reqOptions.length > 0) {
+                            const condition = reqOptions.map(opt => `i = ${opt}`).join(' Or ');
+                            asp += `\t\t' 필수 항목 가중치 고정 및 필수 항목 간 균등 배분 연산\r\n`;
+                            asp += `\t\tIf ${condition} Then \r\n`;
+                            asp += `\t\t\tv_okCnt = v_okCnt - 999999\r\n`;
+                            if(currentRandomCase === '4') asp += `\t\t\thasRequired = True\r\n`;
+                            asp += `\t\tEnd If\r\n\r\n`;
+                        }
+                    }
+
+                    if(currentRandomCase === '5') {
+                        asp += `\t\tIf sqlF = "" Then \r\n\t\t\tsqlF = " select " & i & " as gubun , " & v_Rate & " as okRate "\r\n\t\tElse \r\n\t\t\tsqlF = sqlF & " union all select " & i & " as gubun , " & v_Rate & " as okRate "\r\n\t\tEnd If \r\n`;
+                    } else {
+                        asp += `\t\tIf sqlF = "" Then \r\n\t\t\tsqlF = " select " & i & " as gubun , " & v_okCnt & " as okCnt "\r\n\t\tElse \r\n\t\t\tsqlF = sqlF & " union all select " & i & " as gubun , " & v_okCnt & " as okCnt "\r\n\t\tEnd If \r\n`;
+                    }
+
+                    asp += `\tEnd If \r\nNext \r\n\r\n`;
+
+                    if(currentRandomCase === '4') {
+                        asp += `If hasRequired Then\r\n\ttopCount = ${maxWithReq}\r\nElse\r\n\ttopCount = ${maxCount}\r\nEnd If\r\n\r\n`;
+                    }
+
+                    asp += `' 5. 최종 랜덤 선택 정렬\r\nIf sqlF <> "" Then \r\n`;
+                    
+                    if(currentRandomCase === '5') {
+                        asp += `\tsql = " select top ${maxCount} a.gubun from ( " & sqlF & " ) as a order by a.okRate ASC, newid() "\r\n`;
+                    } else if(currentRandomCase === '4') {
+                        asp += `\tsql = " select top " & topCount & " a.gubun from ( " & sqlF & " ) as a order by a.okCnt ASC, newid() "\r\n`;
+                    } else {
+                        asp += `\tsql = " select top ${maxCount} a.gubun from ( " & sqlF & " ) as a order by a.okCnt ASC, newid() "\r\n`;
+                    }
+
+                    asp += `\tSet rs_f3 = Server.CreateObject("ADODB.Recordset")\r\n\trs_f3.open sql, i_db,1,3\r\n\tIf Not rs_f3.eof Then \r\n\t\tDo While Not rs_f3.EOF\r\n\t\t\tchkFlg(rs_f3(0)) = " checked "\r\n\t\t\trs_f3.movenext()\r\n\t\tLoop\r\n\tEnd If \r\n\tSet rs_f3 = Nothing\r\nEnd If \r\n%>\r\n\r\n`;
+                }
+
+                let modifiedHtml = html.replace(/(<input[^>]+type="(?:checkbox|radio)"[^>]*value="(\d+)"[^>]*?)(\/?>)/gi, (match, prefix, valueStr, suffix) => {
+                    if(currentRandomCase === '1') {
+                        if(!prefix.includes("<% If rndNum")) {
+                            return `${prefix} <% If rndNum="${valueStr}" Then %>checked<% End If %> ${suffix}`;
+                        }
+                    } else {
+                        if(!prefix.includes("<%=chkFlg")) {
+                            return `${prefix} <%=chkFlg(${valueStr})%> ${suffix}`;
+                        }
+                    }
+                    return match;
+                });
+
+                if (!modifiedHtml.includes("id = JS_load") && !modifiedHtml.includes('id="JS_load"')) {
+                    modifiedHtml += `\r\n\r\n<DIV id = JS_load return = "true">\r\ndocument.all["smtBtn"].click();\r\n</DIV>`;
+                }
+
+                document.getElementById('outputHtml').value = asp + modifiedHtml;
+                return true; 
+
+            } catch (err) {
+                alert("랜덤 빌드 중 오류가 발생했습니다: " + err.message);
+                console.error(err);
+                return false;
+            }
+        }
+
+        // ==========================================
+        // 유틸리티 함수 (공통 사용)
+        // ==========================================
+        function executeReset() {
+            try {
+                if(activeCategory === 'random') {
+                    const singleIds = ['inputHtml', 'outputHtml', 'refQ', 'refQList', 'totalOptions', 'maxCount', 'reqOption', 'maxWithReq', 'quotas'];
+                    singleIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if(el) el.value = '';
+                    });
+                    
+                    for(let i=1; i<=10; i++) {
+                        document.getElementById(`multiInput_${i}`).value = '';
+                        document.getElementById(`multiOutput_${i}`).value = '';
+                        document.getElementById(`multiFileNameDisplay_${i}`).classList.add('hidden');
+                    }
+                    multiFileNames = ["", "", "", "", "", "", "", "", "", "", ""];
+                    document.getElementById('useElseN').checked = true; 
+                    selectRandomCase(currentRandomCase); 
+                } 
+                else if (activeCategory === 'text') {
+                    document.getElementById('inputHtml').value = '';
+                    document.getElementById('outputHtml').value = '';
+                    document.getElementById('slideMin').value = '';
+                    document.getElementById('slideMax').value = '';
+                    document.getElementById('slideLeftTxt').value = '';
+                    document.getElementById('slideCenterTxt').value = '';
+                    document.getElementById('slideRightTxt').value = '';
+                    document.getElementById('filterMinLen').value = '';
+                    document.querySelector('input[value="bad"]').checked = true;
+                    document.getElementById('filterMinLenBox').classList.add('hidden');
+                    
+                    for(let i=1; i<=10; i++) {
+                        document.getElementById(`multiInput_${i}`).value = '';
+                        document.getElementById(`multiOutput_${i}`).value = '';
+                        document.getElementById(`multiFileNameDisplay_${i}`).classList.add('hidden');
+                    }
+                    multiFileNames = ["", "", "", "", "", "", "", "", "", "", ""];
+
+                    // 프리셋 초기화 (데이터 비우기, UI만 2_ym 상태 유지)
+                    document.getElementById('dropCalcY').checked = true;
+                    document.getElementById('drop1Start').value = '';
+                    document.getElementById('drop1End').value = '';
+                    document.getElementById('drop2Start').value = '';
+                    document.getElementById('drop2End').value = '';
+                    document.getElementById('drop3Start').value = '';
+                    document.getElementById('drop3End').value = '';
+                    document.getElementById('dropBaseYear').value = '';
+                    document.getElementById('dropBaseMonth').value = '';
+                    changeDropPreset('2_ym', false);
+                }
+
+                originalFileName = ""; 
+                const displaySpan = document.getElementById('fileNameDisplay');
+                if (displaySpan) {
+                    displaySpan.innerText = '';
+                    displaySpan.classList.add('hidden');
+                }
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function copyToClipboard(targetId) {
+            let output = document.getElementById(targetId);
+            if(!output.value) {
+                masterGenerateCode(); 
+            }
+            output.select();
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        }
+
+        function downloadHtm(targetId, targetFileName) {
+            let code = document.getElementById(targetId).value;
+            if(!code) {
+                masterGenerateCode(); 
+                code = document.getElementById(targetId).value; 
+            }
+
+            try {
+                let blobData = [code];
+                let expectedExt = (activeCategory === 'text' && currentTextCase === '2') ? '.js' : '.htm';
+                let mimeType = (expectedExt === '.js') ? 'text/javascript; charset=euc-kr' : 'text/html; charset=euc-kr';
+
+                if (typeof cptable !== 'undefined') {
+                    const encodedData = cptable.utils.encode(949, code);
+                    blobData = [new Uint8Array(encodedData)];
+                } else {
+                    alert("인코딩 통신에 실패하여 기본 UTF-8로 저장됩니다.");
+                }
+
+                const blob = new Blob(blobData, { type: mimeType });
+                
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob, targetFileName || 'Survey_Build.htm');
+                    return;
+                }
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none'; 
+                
+                let fileName = targetFileName;
+                if (!fileName) {
+                    const timeStr = new Date().toISOString().replace(/[:.]/g, '').slice(0,15);
+                    fileName = `Survey_Build_${timeStr}${expectedExt}`;
+                } else {
+                    if (!fileName.toLowerCase().match(/\.(htm|html|js)$/)) {
+                        fileName += expectedExt;
+                    } else if (expectedExt === '.js' && !fileName.toLowerCase().endsWith('.js')) {
+                        fileName += '.js';
+                    }
+                }
+                
+                a.href = url;
+                a.download = fileName; 
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 200);
+
+            } catch (err) {
+                alert("다운로드 처리 중 오류가 발생했습니다: " + err.message);
+                console.error(err);
+            }
+        }
+
+        const rightSection = document.getElementById('rightSection');
+        const dragOverlay = document.getElementById('dragOverlay');
+
+        rightSection.addEventListener('dragover', (e) => {
+            e.preventDefault(); 
+            dragOverlay.classList.remove('hidden');
+        });
+
+        rightSection.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dragOverlay.classList.add('hidden');
+        });
+
+        rightSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragOverlay.classList.add('hidden');
+
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                // 다중 파일 처리 분기 (Random CASE 6 또는 Text CASE 2)
+                if((activeCategory === 'random' && currentRandomCase === '6') || (activeCategory === 'text' && currentTextCase === '2')) {
+                    let files = Array.from(e.dataTransfer.files).filter(f => f.name.toLowerCase().match(/\.(html?|js)$/));
+                    files.sort((a, b) => {
+                        let numA = a.name.match(/_(\d+)\./) ? parseInt(a.name.match(/_(\d+)\./)[1]) : 0;
+                        let numB = b.name.match(/_(\d+)\./) ? parseInt(b.name.match(/_(\d+)\./)[1]) : 0;
+                        return numA - numB;
+                    });
+                    Promise.all(files.map(f => new Promise(resolve => {
+                        const reader = new FileReader();
+                        reader.onload = ev => resolve({name: f.name, content: ev.target.result});
+                        reader.readAsText(f, 'euc-kr');
+                    }))).then(results => {
+                        results.forEach((res, index) => {
+                            if(index < 10) {
+                                document.getElementById(`multiInput_${index+1}`).value = res.content;
+                                multiFileNames[index+1] = res.name;
+                                const disp = document.getElementById(`multiFileNameDisplay_${index+1}`);
+                                disp.innerText = `업로드됨: ${res.name}`;
+                                disp.classList.remove('hidden');
+                            }
+                        });
+                    });
+                } else {
+                    const file = e.dataTransfer.files[0];
+                    originalFileName = file.name; 
+                    const displaySpan = document.getElementById('fileNameDisplay');
+                    displaySpan.innerText = `업로드됨: ${file.name}`;
+                    displaySpan.classList.remove('hidden');
+
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('inputHtml').value = event.target.result;
+                    };
+                    reader.readAsText(file, 'euc-kr'); 
+                }
+            }
+        });
+    </script>
+</body>
+</html>
