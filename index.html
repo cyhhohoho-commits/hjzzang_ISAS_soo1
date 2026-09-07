@@ -1294,6 +1294,14 @@ html,body{margin:0;padding:0}
                             <span class="fld-hint">문항 ID와 <b>+ − * / ( )</b> 만 쓸 수 있습니다. 여러 문항도 됩니다. 예) <b>Q1TN1 * Q2TN1</b>, <b>Q2TN1 * 60</b></span>
                         </div>
                         <div>
+                            <label class="fld-label">앞 페이지에서 가져올 문항 <span class="text-xs muted font-normal">(선택사항)</span></label>
+                            <input type="text" id="calcPrev" class="inp" style="font-family:var(--mono)" placeholder="예: Q110TN1">
+                            <span class="fld-hint">
+                                계산식에 <b>이 페이지에 없는 문항</b>을 쓰려면 여기에 적어 주세요. 콤마로 여러 개도 됩니다.<br>
+                                그 문항의 응답을 <b>DB에서 읽어와</b> 계산에 씁니다.
+                            </span>
+                        </div>
+                        <div>
                             <label class="fld-label">결과가 들어갈 자리 표시</label>
                             <input type="text" id="calcMarker" class="inp" value="(자동계산)">
                             <span class="fld-hint">원본 문항에 이 문구를 미리 넣어 두세요. 그 자리에 계산 결과가 들어갑니다.</span>
@@ -2828,11 +2836,16 @@ html,body{margin:0;padding:0}
                   '예) 적립률 %를 입력하면 실제 적립 <b>금액</b>이 바로 뜨게',
                   '개월 수 환산, 비율 계산 등에도 씁니다'],
             fld:[['계산식','문항 ID와 <b>+ − * / ( )</b> 로 씁니다. 예) <b>Q399TN1 * 200</b><span class="sub">여러 문항도 됩니다. 예) <b>Q1TN1 * Q2TN1</b> · <b>Q2TN1 * 60</b> — 참조한 입력칸 전부에 자동으로 연결됩니다.</span>'],
+                 ['앞 페이지에서 가져올 문항','계산식에 <b>이 페이지에 없는 문항</b>을 쓸 때 적습니다. 예) <b>Q110TN1</b>'
+                 + '<span class="sub">그 문항의 응답을 <b>DB에서 읽어와</b> 계산에 씁니다. 여기 적지 않으면 빌드가 막힙니다. '
+                 + '오타로 없는 문항을 쓰는 것을 막기 위해 일부러 적게 했습니다.</span>'],
                  ['결과가 들어갈 자리','원본 문항에 <b>(자동계산)</b> 을 미리 넣어 두세요. 그 자리가 결과 칸으로 바뀝니다.<span class="sub">원본에 이 문구가 없으면 <b>빌드가 막힙니다.</b></span>'],
                  ['소수 자릿수','0이면 정수로 반올림합니다.<span class="sub">1.1 × 200 처럼 소수 계산에서 생기는 <b>220.00000000000003</b> 같은 오차를 없애 줍니다.</span>'],
                  ['값이 없을 때','아직 입력 전이거나 숫자가 아닐 때 보여줄 문구. 비우면 아무것도 안 보입니다.'],
                  ['천단위 콤마','2000 → <b>2,000</b>']],
-            out:['<b>(자동계산)</b> 자리에 결과 칸을 넣고, 참조한 입력칸에 <b>oninput</b> 을 겁니다.',
+            out:['<b>(자동계산)</b> 자리에 결과 칸을 넣고, <b>이 페이지의</b> 참조 입력칸에 <b>oninput</b> 을 겁니다.',
+                 '앞 페이지 문항을 쓰면 맨 위에 <b>ASP 조회 코드</b>가 붙어 그 값을 가져옵니다. '
+                 + '<span class="sub">앞 페이지 값이 비어 있으면 결과도 빈칸으로 둡니다.</span>',
                  '<b>oninput</b> 이라 키보드뿐 아니라 붙여넣기·자동완성으로 채워도 바로 계산됩니다.',
                  '함수와 결과 칸 이름에 <b>문항 블록 ID</b>를 붙여, 한 페이지에 여러 개를 올려도 서로 덮어쓰지 않습니다.',
                  '값이 비었거나 숫자가 아니면 결과를 지웁니다. <b>NaN</b> 이 화면에 뜨지 않습니다.'],
@@ -3070,9 +3083,22 @@ html,body{margin:0;padding:0}
                 }
                 if (!paren || bal !== 0) vErr('계산식의 <b>괄호</b>가 맞지 않습니다.');
 
-                const missing = refs.filter(r =>
-                    html.indexOf('id="' + r + '"') < 0 && html.indexOf('name="' + r + '"') < 0);
-                if (missing.length) vErr('원본에 <b>' + missing.join(', ') + '</b> 입력칸이 없습니다. 문항 ID를 확인해 주세요.');
+                // 앞 페이지에서 가져올 문항
+                const prevList = (document.getElementById('calcPrev').value || '')
+                                 .split(',').map(s => s.trim()).filter(s => s);
+                const onPage = refs.filter(r =>
+                    html.indexOf('id="' + r + '"') >= 0 || html.indexOf('name="' + r + '"') >= 0);
+                const fromPrev = refs.filter(r => prevList.indexOf(r) >= 0 && onPage.indexOf(r) < 0);
+                const missing = refs.filter(r => onPage.indexOf(r) < 0 && fromPrev.indexOf(r) < 0);
+                if (missing.length) {
+                    vErr('원본에 <b>' + missing.join(', ') + '</b> 입력칸이 없습니다.'
+                       + '<span class="sub">앞 페이지 문항이라면 <b>앞 페이지에서 가져올 문항</b> 칸에 적어 주세요. '
+                       + '같은 페이지 문항이라면 ID 를 확인해 주세요.</span>');
+                }
+                const unused = prevList.filter(r => refs.indexOf(r) < 0);
+                if (unused.length) vWarn('<b>' + unused.join(', ') + '</b> 는 계산식에 쓰이지 않았습니다.');
+                if (!onPage.length && refs.length)
+                    vWarn('계산식이 <b>앞 페이지 값만</b> 씁니다. 이 페이지에서는 값이 바뀌지 않아 결과가 고정으로 보입니다.');
                 if (formula.indexOf('/') >= 0) vWarn('나눗셈이 있습니다. 나누는 값이 <b>0</b> 이면 결과가 표시되지 않습니다.');
                 if (vStop()) return false;
 
@@ -3083,9 +3109,9 @@ html,body{margin:0;padding:0}
 
                 let out = html.replace(marker, '<span id="' + sid + '"></span>');
 
-                // ── 참조 입력칸에 oninput 걸기 ──
+                // ── 참조 입력칸에 oninput 걸기 (같은 페이지 문항만) ──
                 const hooked = [];
-                refs.forEach(r => {
+                onPage.forEach(r => {
                     const re1 = new RegExp('<input[^>]*id="' + r + '"[^>]*>', 'i');
                     const m1 = out.match(re1);
                     if (!m1) return;
@@ -3105,6 +3131,29 @@ html,body{margin:0;padding:0}
                 const NL = '\n';
                 let expr = formula;
                 refs.forEach((r, k) => { expr = expr.split(r).join('v' + (k + 1)); });
+
+                // 앞 페이지 값은 ASP 로 읽어 온다
+                let aspHead = '';
+                if (fromPrev.length) {
+                    const N2 = '\r\n';
+                    aspHead += '<!-- #include virtual="/include/i_db.asp"-->' + N2 + '<%' + N2;
+                    aspHead += "' [자동계산] 앞 페이지 문항 값을 가져온다 (" + fromPrev.join(', ') + ')' + N2;
+                    aspHead += 'TxtMode = request("TxtMode")' + N2 + 'TxtSurveyID = request("TxtSurveyID")' + N2 + N2;
+                    aspHead += 'if TxtMode <> "" then' + N2 + '\ttblName = "tmRespondanswer"' + N2
+                             + 'else' + N2 + '\ttblName = "emRespondanswer"' + N2 + 'end if' + N2 + N2;
+                    aspHead += 'sql_ac = "SELECT ANSNO, AnsValue FROM " & tblName & " WHERE SurveyID = \'" & TxtSurveyID & "\' AND " & _' + N2;
+                    aspHead += '\t\t" panelid = \'" & request("TxtPanelID") & "\' and ANSNO in ('
+                             + fromPrev.map(r => "'" + r + "'").join(',') + ') "' + N2 + N2;
+                    aspHead += 'Set rs_ac = Server.CreateObject("ADODB.Recordset")' + N2 + 'rs_ac.open sql_ac, i_db,1,3' + N2 + N2;
+                    fromPrev.forEach(r => { aspHead += 'ac_' + r + ' = ""' + N2; });
+                    aspHead += 'Do While Not rs_ac.EOF' + N2;
+                    fromPrev.forEach(r => {
+                        aspHead += '\tIf rs_ac("ANSNO") = "' + r + '" Then' + N2;
+                        aspHead += '\t\tac_' + r + ' = Trim(rs_ac("AnsValue") & "")' + N2;
+                        aspHead += '\tEnd If' + N2;
+                    });
+                    aspHead += 'rs_ac.movenext()' + N2 + 'Loop' + N2 + 'Set rs_ac = Nothing' + N2 + '%>' + N2 + N2;
+                }
                 const esc = s => String(s).replace(/\\/g, '\\\\').replace(/"/g, '&quot;');
 
                 let js = NL + '<script type="text/javascript">' + NL + '<!--' + NL;
@@ -3116,6 +3165,12 @@ html,body{margin:0;padding:0}
                 js += '\t\tvar s = (e.value + "").replace(/^\\s+|\\s+$/g, "");' + NL;
                 js += '\t\tif (s === "" || isNaN(s)) { return null; }' + NL;
                 js += '\t\treturn Number(s);' + NL + '\t}' + NL;
+                if (fromPrev.length) {
+                    js += '\tfunction OQ70AC_pv(s) {' + NL;
+                    js += '\t\ts = (s + "").replace(/^\\s+|\\s+$/g, "");' + NL;
+                    js += '\t\tif (s === "" || isNaN(s)) { return null; }' + NL;
+                    js += '\t\treturn Number(s);' + NL + '\t}' + NL;
+                }
                 js += '\tfunction OQ70AC_fmt(n, dec, comma) {' + NL;
                 js += '\t\tvar s = n.toFixed(dec);' + NL;
                 js += '\t\tif (comma) {' + NL;
@@ -3126,7 +3181,13 @@ html,body{margin:0;padding:0}
                 js += '\tfunction ' + sid + '() {' + NL;
                 js += '\t\tvar o = document.getElementById("' + sid + '");' + NL;
                 js += '\t\tif (!o) { return; }' + NL;
-                refs.forEach((r, k) => { js += '\t\tvar v' + (k + 1) + ' = OQ70AC_val("' + r + '");' + NL; });
+                refs.forEach((r, k) => {
+                    if (fromPrev.indexOf(r) >= 0) {
+                        js += '\t\tvar v' + (k + 1) + ' = OQ70AC_pv("<%=ac_' + r + '%>");   /* 앞 페이지 ' + r + ' */' + NL;
+                    } else {
+                        js += '\t\tvar v' + (k + 1) + ' = OQ70AC_val("' + r + '");' + NL;
+                    }
+                });
                 js += '\t\tif (' + refs.map((r, k) => 'v' + (k + 1) + ' === null').join(' || ')
                     + ') { o.innerHTML = "' + esc(empty) + '"; return; }' + NL;
                 js += '\t\tvar r = ' + expr + ';' + NL;
@@ -3136,9 +3197,10 @@ html,body{margin:0;padding:0}
                 js += '\ttry { ' + sid + '(); } catch(e) {}' + NL;
                 js += '//-->' + NL + '<' + '/script>' + NL;
 
-                document.getElementById('outputHtml').value = out + js;
+                document.getElementById('outputHtml').value = aspHead + out + js;
                 showBuildStatus('빌드 완료 &nbsp;·&nbsp; 자동계산 &nbsp;·&nbsp; <b>' + formula + '</b>'
-                    + ' &nbsp;·&nbsp; 참조 <b>' + hooked.join(', ') + '</b>'
+                    + ' &nbsp;·&nbsp; 이 페이지 <b>' + (hooked.join(', ') || '없음') + '</b>'
+                    + (fromPrev.length ? ' &nbsp;·&nbsp; 앞 페이지 <b>' + fromPrev.join(', ') + '</b>' : '')
                     + ' &nbsp;·&nbsp; 소수 <b>' + dec + '자리</b>' + (comma ? ' · 콤마' : ''), 'ok');
                 return true;
 
@@ -3595,7 +3657,7 @@ End Function
         //  · 암호를 바꾸려면 아래 STAT_PW 값을 새 암호의 해시로 바꾸세요.
         //    해시는 기록 화면의 [암호 해시 만들기] 로 구할 수 있습니다.
         // ═══════════════════════════════════════════════════════════
-        const TOOL_VER = 'v9.3';
+        const TOOL_VER = 'v9.5';
         const STAT_KEY = 'OQ70_STAT_v1';
         let STAT_PW = 578595637;          // 기본 암호 : @@70admin
 
@@ -4756,7 +4818,15 @@ End Function
             "\tEnd Function "
         ].join("\r\n");
 
-        function vbq(s) { return String(s).replace(/"/g, '""'); }
+        // VBScript 문자열 리터럴은 여러 줄에 걸칠 수 없다.
+        // 줄바꿈·탭을 공백으로 접고 연속 공백을 줄인 뒤 따옴표를 이스케이프한다.
+        function vbq(s) {
+            return String(s)
+                .replace(/\r/g, '')
+                .replace(/[\n\t]+/g, ' ')
+                .replace(/ {2,}/g, ' ')
+                .replace(/"/g, '""');
+        }
 
         function likertCollectGroups() {
             const groups = [];
@@ -5084,6 +5154,9 @@ End Function
             const nums = qs.map(q => q.num);
             let sequential = qs.every(q => q.prefix === prefix && q.suffix === suffix);
             for (let r = 1; r < n && sequential; r++) if (nums[r] !== nums[r - 1] + 1) sequential = false;
+            if (!sequential) vWarn('원본의 문항 ID 가 <b>연속이 아닙니다.</b> '
+                + '<span class="sub">' + qs.map(q => q.full).join(' · ') + '<br>'
+                + '원본에 있던 이름을 그대로 쓰므로 문제는 없지만, 빠진 문항이 없는지 확인해 주세요.</span>');
 
             // 3) ASP 헤더 조립
             let asp = '<%' + NL + NL + LIKERT_ASP_LIB + NL + NL;
@@ -5097,15 +5170,11 @@ End Function
             });
             asp += NL;
 
-            asp += "\t' [문항 ID 배열]" + NL;
-            if (sequential) {
-                asp += '\tFor i = ' + nums[0] + ' To ' + nums[n - 1] + NL;
-                asp += '\t\tpreVar = preVar & "@" & i' + NL;
-                asp += '\tNext ' + NL;
-            } else {
-                asp += '\tpreVar = "' + nums.map(v => '@' + v).join('') + '"' + NL;
-            }
-            asp += '\ttmpVar = Split(preVar,"@")' + NL + NL;
+            asp += "\t' [문항 ID 배열] 원본의 name 을 그대로 담는다 (번호를 계산하지 않으므로" + NL;
+            asp += "\t'                번호가 연속이 아니거나 형태가 달라도 안전하다)" + NL;
+            asp += '\tDim tmpQid(' + n + ')' + NL;
+            qs.forEach((q, i) => { asp += '\ttmpQid(' + (i + 1) + ') = "' + vbq(q.full) + '"' + NL; });
+            asp += NL;
 
             if (showCat === 'Y') {
                 asp += "\t' [그룹(세트) 정의]" + NL;
@@ -5184,7 +5253,7 @@ End Function
 
             let rowHtml = tpl.outerHTML;
             rowHtml = rowHtml.split(TEXT_TOKEN).join('<%= tmpText(tmpList(i)) %>');
-            rowHtml = rowHtml.split(qs[0].full).join(prefix + '<%= tmpVar(tmpList(i)) %>' + suffix);
+            rowHtml = rowHtml.split(qs[0].full).join('<%= tmpQid(tmpList(i)) %>');
             if (groupBlock) {
                 const openTag = rowHtml.match(/^<tr[^>]*>/i)[0];
                 rowHtml = openTag + NL + groupBlock + rowHtml.slice(openTag.length);
@@ -6608,6 +6677,7 @@ End Function
                     document.getElementById('outputHtml').value = '';
                     document.getElementById('calcFormula').value = '';
                     document.getElementById('calcMarker').value = '(자동계산)';
+                    document.getElementById('calcPrev').value = '';
                     document.getElementById('calcDec').value = '0';
                     document.getElementById('calcEmpty').value = '';
                     document.getElementById('calcComma').checked = true;
