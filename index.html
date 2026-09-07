@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta name="robots" content="noindex, nofollow, noarchive">
     <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@@70 Survey Logic Builder (Production)</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -232,6 +232,54 @@ html,body{margin:0;padding:0}
         #tab-likert.tab-active{border-bottom-color:#0369A1}
         #tab-likert.tab-active b{color:#0369A1}
         #tab-calc.tab-active{border-bottom-color:#B45309}
+        .sub-pick{display:flex;flex-direction:column;gap:9px}
+        .sub-card{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;
+                  border-radius:11px;padding:15px 17px;cursor:pointer;transition:.12s;position:relative}
+        .sub-card:hover{border-color:var(--acc);background:var(--acc-soft)}
+        .sub-card b{display:block;font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
+        .sub-card span{display:block;font-size:12px;color:var(--ink-3);line-height:1.55}
+        .sub-card i{position:absolute;right:16px;top:16px;font-style:normal;font-size:11px;font-weight:700;
+                    color:var(--acc-ink);background:var(--acc-soft);border-radius:20px;padding:3px 9px}
+        .sub-card:hover i{background:#fff}
+        .sub-back{border:0;background:none;color:var(--ink-4);font-size:12px;cursor:pointer;padding:2px 0 8px}
+        .sub-back:hover{color:var(--ink-2)}
+        .sub-head-in{margin-top:0 !important}
+        .sub-head{font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.4px;
+                  margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line-2)}
+        .sub-head:first-child{margin-top:0}
+        .gd-tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:0}
+        .gd-tab{border:0;background:none;padding:8px 14px 10px;font-size:13px;font-weight:700;color:var(--ink-4);
+                cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+        .gd-tab:hover{color:var(--ink-2)}
+        .gd-tab-on{color:var(--ink);border-bottom-color:var(--ink)}
+        .gd-q{font-size:15px;font-weight:700;color:var(--ink);margin:4px 0 12px}
+        .gd-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;
+                padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.12s;font-size:13.5px;color:var(--ink-2)}
+        .gd-opt:hover{border-color:var(--ink-4);background:#FBFCFE}
+        .gd-opt b{color:var(--ink);display:block;margin-bottom:2px;font-size:14px}
+        .gd-opt span{font-size:12px;color:var(--ink-3)}
+        .gd-back{border:0;background:none;color:var(--ink-4);font-size:12px;cursor:pointer;padding:4px 0;margin-bottom:6px}
+        .gd-back:hover{color:var(--ink-2)}
+        .gd-hit{border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:10px;padding:13px 15px;margin-bottom:9px;background:#fff}
+        .gd-hit .gd-cat{font-size:11px;font-weight:700;color:var(--ink-4);letter-spacing:.3px}
+        .gd-hit .gd-nm{font-size:15px;font-weight:700;color:var(--ink);margin:3px 0 5px}
+        .gd-hit .gd-why{font-size:12.5px;color:var(--ink-2);line-height:1.65}
+        .gd-hit .gd-act{margin-top:10px;display:flex;gap:6px}
+        .gd-none{font-size:13px;color:var(--ink-3);padding:18px;text-align:center;background:#FBFCFE;border:1px dashed var(--line);border-radius:10px;line-height:1.7}
+        .gd-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+        .gd-tbl th{background:#F4F7FB;padding:7px 9px;text-align:left;color:var(--ink-2);border:1px solid var(--line-2);font-weight:700}
+        .gd-tbl td{padding:7px 9px;border:1px solid var(--line-2);color:var(--ink-2);line-height:1.6}
+        #statModal{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:100;display:flex;
+                   align-items:center;justify-content:center;padding:24px}
+        #statModal.hidden{display:none}
+        .st-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+        .st-tbl th{background:#F4F7FB;padding:6px 8px;text-align:left;color:var(--ink-2);border-bottom:1px solid var(--line);font-weight:700}
+        .st-tbl td{padding:5px 8px;border-bottom:1px solid var(--line-2);color:var(--ink-2)}
+        .st-bar{height:7px;background:var(--acc-soft);border-radius:4px;overflow:hidden;min-width:40px}
+        .st-bar i{display:block;height:100%;background:var(--acc)}
+        .st-sum{font-size:12px;color:var(--ink-3);margin-bottom:12px;line-height:1.7}
+        #guideModal{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px}
+        #guideModal.hidden{display:none}
         #tab-calc.tab-active b{color:#B45309}
 
         .case-row{display:flex;gap:11px;align-items:flex-start;padding:9px 11px 9px 10px;
@@ -340,9 +388,15 @@ html,body{margin:0;padding:0}
         <div class="flex items-center gap-2.5">
             <svg class="w-5 h-5" style="color:#8B95F5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
             <h1 class="text-white font-bold" style="font-size:14.5px;letter-spacing:-.2px">@@70 수작업 문항 코드 빌더</h1>
-            <span class="px-1.5 py-0.5 rounded font-mono font-bold" style="font-size:10px;color:#B8C0FA;background:rgba(139,149,245,.16)">v7.9</span>
+            <span onclick="openStat()" title="" class="px-1.5 py-0.5 rounded font-mono font-bold" style="font-size:10px;color:#B8C0FA;background:rgba(139,149,245,.16);cursor:default">v9.1</span>
         </div>
-        <div style="font-size:11px;color:#95A0B5">문항 파일을 넣고 · 로직을 고르고 · 코드를 받습니다</div>
+        <div class="flex items-center gap-3">
+            <span style="font-size:11px;color:#95A0B5">문항 파일을 넣고 · 로직을 고르고 · 코드를 받습니다</span>
+            <button type="button" onclick="openGuide()" class="btn btn-sm"
+                style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)">
+                어떤 걸 써야 하나요?
+            </button>
+        </div>
     </header>
 
     <!-- Main Content -->
@@ -355,7 +409,7 @@ html,body{margin:0;padding:0}
             <div class="flex shrink-0">
                 <button type="button" id="tab-random" onclick="switchCategory('random')" class="tab tab-active"><b>랜덤 셀렉트</b><i>보기 자동 배정 · 8</i></button>
                 <button type="button" id="tab-text" onclick="switchCategory('text')" class="tab"><b>주관식</b><i>입력칸 변환 · 4</i></button>
-                <button type="button" id="tab-likert" onclick="switchCategory('likert')" class="tab"><b>대분류 로테이션</b><i>순서 무작위화 · 3</i></button>
+                <button type="button" id="tab-likert" onclick="switchCategory('likert')" class="tab"><b>로테이션</b><i>순서 제어 · 5</i></button>
                 <button type="button" id="tab-calc" onclick="switchCategory('calc')" class="tab"><b>자동계산</b><i>결과 즉시 표시 · 1</i></button>
             </div>
 
@@ -368,93 +422,95 @@ html,body{margin:0;padding:0}
                 <div id="category-random" class="block">
                     <div class="eyebrow">로직 선택</div>
                     <div class="space-y-1.5 mb-5">
-                        <div class="case-wrap">
+                                                <div class="sub-head">쿼터 관련</div>
+<div class="case-wrap">
                             <label class="case-row" id="lbl-random-case0" onclick="selectRandomCase('0')">
                                 <input type="radio" name="randomCaseType" value="0">
-                                <span class="case-num">00</span>
+                                <span class="case-num">1-1</span>
                                 <span class="case-body">
-                                    <span class="case-title">단일 차원 쿼터 할당</span>
-                                    <span class="case-desc">목표 쿼터에 맞춰 보기 1개를 자동 배정</span>
+                                    <span class="case-title">쿼터가 BY 없이 집단만 있을 때</span>
+                                    <span class="case-desc">집단별 목표 쿼터에 맞춰 1개 배정</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('0')" title="CASE 0 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('0')" title="CASE 1-1 메뉴얼 보기">메뉴얼</button>
                         </div>
-                        <div class="case-wrap">
+<div class="case-wrap">
                             <label class="case-row" id="lbl-random-case1" onclick="selectRandomCase('1')">
                                 <input type="radio" name="randomCaseType" value="1" checked>
-                                <span class="case-num">01</span>
+                                <span class="case-num">1-2</span>
                                 <span class="case-body">
-                                    <span class="case-title">다차원 교차 쿼터 할당</span>
-                                    <span class="case-desc">앞 문항 여러 개의 응답 조합별로 균형 배정</span>
+                                    <span class="case-title">쿼터가 BY 일 때</span>
+                                    <span class="case-desc">성별·연령 등 BY 조합 안에서 집단을 골고루</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('1')" title="CASE 1 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('1')" title="CASE 1-2 메뉴얼 보기">메뉴얼</button>
                         </div>
-                        <div class="case-wrap">
-                            <label class="case-row" id="lbl-random-case2" onclick="selectRandomCase('2')">
-                                <input type="radio" name="randomCaseType" value="2">
-                                <span class="case-num">02</span>
-                                <span class="case-body">
-                                    <span class="case-title">기본 랜덤 추출</span>
-                                    <span class="case-desc">앞 문항에서 고른 보기 중 골고루 추출</span>
-                                </span>
-                            </label>
-                            <button type="button" class="case-man" onclick="openManual('2')" title="CASE 2 메뉴얼 보기">메뉴얼</button>
-                        </div>
-                        <div class="case-wrap">
-                            <label class="case-row" id="lbl-random-case3" onclick="selectRandomCase('3')">
-                                <input type="radio" name="randomCaseType" value="3">
-                                <span class="case-num">03</span>
-                                <span class="case-body">
-                                    <span class="case-title">다중 필수 추출</span>
-                                    <span class="case-desc">필수 보기를 먼저 넣고 나머지를 골고루 추출</span>
-                                </span>
-                            </label>
-                            <button type="button" class="case-man" onclick="openManual('3')" title="CASE 3 메뉴얼 보기">메뉴얼</button>
-                        </div>
-                        <div class="case-wrap">
-                            <label class="case-row" id="lbl-random-case4" onclick="selectRandomCase('4')">
-                                <input type="radio" name="randomCaseType" value="4">
-                                <span class="case-num">04</span>
-                                <span class="case-body">
-                                    <span class="case-title">필수 포함 시 개수 가변</span>
-                                    <span class="case-desc">필수 보기가 걸리면 추출 개수를 다르게</span>
-                                </span>
-                            </label>
-                            <button type="button" class="case-man" onclick="openManual('4')" title="CASE 4 메뉴얼 보기">메뉴얼</button>
-                        </div>
-                        <div class="case-wrap">
+<div class="case-wrap">
                             <label class="case-row" id="lbl-random-case5" onclick="selectRandomCase('5')">
                                 <input type="radio" name="randomCaseType" value="5">
-                                <span class="case-num">05</span>
+                                <span class="case-num">1-3</span>
                                 <span class="case-body">
-                                    <span class="case-title">쿼터 비율 할당</span>
-                                    <span class="case-desc">보기마다 다른 목표 쿼터로 비율 맞춤</span>
+                                    <span class="case-title">앞 문항 선택 보기 중 1개 · 쿼터대로</span>
+                                    <span class="case-desc">보기별 목표 쿼터에서 부족한 것 먼저</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('5')" title="CASE 5 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('5')" title="CASE 1-3 메뉴얼 보기">메뉴얼</button>
                         </div>
-                        <div class="case-wrap">
-                            <label class="case-row" id="lbl-random-case6" onclick="selectRandomCase('6')">
-                                <input type="radio" name="randomCaseType" value="6">
-                                <span class="case-num">06</span>
-                                <span class="case-body">
-                                    <span class="case-title">순차 배타 추출 <span class="case-tag">다중 파일</span></span>
-                                    <span class="case-desc">여러 문항에 겹치지 않게 이어서 배정</span>
-                                </span>
-                            </label>
-                            <button type="button" class="case-man" onclick="openManual('6')" title="CASE 6 메뉴얼 보기">메뉴얼</button>
-                        </div>
-                        <div class="case-wrap">
+<div class="case-wrap">
                             <label class="case-row" id="lbl-random-case7" onclick="selectRandomCase('7')">
                                 <input type="radio" name="randomCaseType" value="7">
-                                <span class="case-num">07</span>
+                                <span class="case-num">1-4</span>
                                 <span class="case-body">
-                                    <span class="case-title">교차 쿼터 지정</span>
-                                    <span class="case-desc">성별·연령 등 셀마다 집단별 목표를 따로 지정</span>
+                                    <span class="case-title">쿼터가 BY 이고 집단별 목표가 다를 때</span>
+                                    <span class="case-desc">BY 조합마다 집단 목표를 따로 지정</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('7')" title="CASE 7 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('7')" title="CASE 1-4 메뉴얼 보기">메뉴얼</button>
+                        </div>
+                        <div class="sub-head">MAX 골고루 보기 선택</div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-random-case2" onclick="selectRandomCase('2')">
+                                <input type="radio" name="randomCaseType" value="2">
+                                <span class="case-num">2-1</span>
+                                <span class="case-body">
+                                    <span class="case-title">앞 문항 선택 보기 중 MAX 선택</span>
+                                    <span class="case-desc">고른 보기 중 MAX 개를 골고루</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('2')" title="CASE 2-1 메뉴얼 보기">메뉴얼</button>
+                        </div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-random-case3" onclick="selectRandomCase('3')">
+                                <input type="radio" name="randomCaseType" value="3">
+                                <span class="case-num">2-2</span>
+                                <span class="case-body">
+                                    <span class="case-title">앞 문항 선택 보기 중 MAX 선택 + 필수</span>
+                                    <span class="case-desc">반드시 들어가야 할 보기를 지정</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('3')" title="CASE 2-2 메뉴얼 보기">메뉴얼</button>
+                        </div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-random-case4" onclick="selectRandomCase('4')">
+                                <input type="radio" name="randomCaseType" value="4">
+                                <span class="case-num">2-3</span>
+                                <span class="case-body">
+                                    <span class="case-title">필수 보기가 걸리면 MAX 개수 늘리기</span>
+                                    <span class="case-desc">평소 3개, 필수 걸리면 4개처럼</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('4')" title="CASE 2-3 메뉴얼 보기">메뉴얼</button>
+                        </div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-random-case6" onclick="selectRandomCase('6')">
+                                <input type="radio" name="randomCaseType" value="6">
+                                <span class="case-num">2-4</span>
+                                <span class="case-body">
+                                    <span class="case-title">여러 페이지에 겹치지 않게 1개씩 <span class="case-tag">다중 파일</span></span>
+                                    <span class="case-desc">앞 페이지에 배정된 보기는 제외</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('6')" title="CASE 2-4 메뉴얼 보기">메뉴얼</button>
                         </div>
                     </div>
 
@@ -943,38 +999,63 @@ html,body{margin:0;padding:0}
                 <div id="category-likert" class="hidden">
                     <div class="eyebrow">로직 선택</div>
                     <div class="space-y-1.5 mb-5">
-                        <div class="case-wrap">
+                                                <div class="sub-head">가로테이블</div>
+<div class="case-wrap">
                             <label class="case-row case-active" id="lbl-likert-case1">
                                 <input type="radio" name="likertCaseType" value="1" checked>
-                                <span class="case-num">01</span>
+                                <span class="case-num">1-1</span>
                                 <span class="case-body">
-                                    <span class="case-title">행 대분류 + 세트 로테이션</span>
+                                    <span class="case-title">가로테이블 리커트척도 대분류 로테이션</span>
                                     <span class="case-desc">문항을 세트로 묶고 세트 안·세트 간 순서를 무작위화</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('1')" title="CASE 1 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('1')" title="CASE 1-1 메뉴얼 보기">메뉴얼</button>
                         </div>
-                        <div class="case-wrap">
-                            <label class="case-row" id="lbl-likert-case2" onclick="selectLikertCase('2')">
-                                <input type="radio" name="likertCaseType" value="2">
-                                <span class="case-num">02</span>
-                                <span class="case-body">
-                                    <span class="case-title">열 제어 + 행 대분류 로테이션</span>
-                                    <span class="case-desc">앞 문항 응답에 따라 열을 보이거나 감춤</span>
-                                </span>
-                            </label>
-                            <button type="button" class="case-man" onclick="openManual('2')" title="CASE 2 메뉴얼 보기">메뉴얼</button>
-                        </div>
-                        <div class="case-wrap">
+<div class="case-wrap">
                             <label class="case-row" id="lbl-likert-case3" onclick="selectLikertCase('3')">
                                 <input type="radio" name="likertCaseType" value="3">
-                                <span class="case-num">03</span>
+                                <span class="case-num">1-2</span>
                                 <span class="case-body">
-                                    <span class="case-title">열 순서 무작위 (표 연동)</span>
+                                    <span class="case-title">척도 문항에서 척도 열 라벨과 문항 가운데 표의 순서가 맞도록 로테이션</span>
                                     <span class="case-desc">위 제시표와 아래 문항표의 열 순서를 함께 섞음</span>
                                 </span>
                             </label>
-                            <button type="button" class="case-man" onclick="openManual('3')" title="CASE 3 메뉴얼 보기">메뉴얼</button>
+                            <button type="button" class="case-man" onclick="openManual('3')" title="CASE 1-2 메뉴얼 보기">메뉴얼</button>
+                        </div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-likert-case5" onclick="selectLikertCase('5')">
+                                <input type="radio" name="likertCaseType" value="5">
+                                <span class="case-num">1-3</span>
+                                <span class="case-body">
+                                    <span class="case-title">가로테이블 리커트척도 대분류 추가 + 참조 선택 보기만 제시</span>
+                                    <span class="case-desc">앞 문항에서 고른 보기만 남기고 대분류 칸을 붙임</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('5')" title="CASE 1-3 메뉴얼 보기">메뉴얼</button>
+                        </div>
+                        <div class="sub-head">세로테이블</div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-likert-case2" onclick="selectLikertCase('2')">
+                                <input type="radio" name="likertCaseType" value="2">
+                                <span class="case-num">2-1</span>
+                                <span class="case-body">
+                                    <span class="case-title">구조파이핑 세로테이블 다중선택형 보기 대분류 로테이션</span>
+                                    <span class="case-desc">앞 문항 응답에 따라 열을 보이거나 감춤</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('2')" title="CASE 2-1 메뉴얼 보기">메뉴얼</button>
+                        </div>
+                        <div class="sub-head">페이지 별 로테이션</div>
+<div class="case-wrap">
+                            <label class="case-row" id="lbl-likert-case4" onclick="selectLikertCase('4')">
+                                <input type="radio" name="likertCaseType" value="4">
+                                <span class="case-num">3-1</span>
+                                <span class="case-body">
+                                    <span class="case-title">앞 페이지 제시 순서에 따라 보기 순서 로테이션</span>
+                                    <span class="case-desc">앞에서 로테이션된 페이지 순서대로 보기를 배치</span>
+                                </span>
+                            </label>
+                            <button type="button" class="case-man" onclick="openManual('4')" title="CASE 3-1 메뉴얼 보기">메뉴얼</button>
                         </div>
                     </div>
 
@@ -1071,6 +1152,110 @@ html,body{margin:0;padding:0}
                     </div>
                     </div>
 
+                    <!-- CASE 2 전용 -->
+                    <div id="lk2Box" class="hidden space-y-3">
+                        <div id="lk2Detect" style="font-size:11.5px;color:var(--ink-3);background:#FBFCFE;border:1px solid var(--line-2);border-radius:8px;padding:9px">
+                            원본을 넣으면 표 구조를 자동으로 읽습니다.
+                        </div>
+                        <div class="card space-y-3">
+                            <div>
+                                <label class="fld-label">참조 문항 (열 제어)</label>
+                                <input type="text" id="lk2Ref" class="inp" placeholder="예: Q72MA">
+                                <span class="fld-hint">이 <b>복수응답</b> 문항에서 고른 것만 열로 보여 줍니다. <b>반드시 입력해야 합니다.</b></span>
+                            </div>
+                            <div>
+                                <label class="fld-label">행 로테이션 방식</label>
+                                <div class="flex gap-2 flex-wrap">
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk2rot-none"><input type="radio" name="lk2Rot" value="none" class="hidden" onclick="switchLk2Rot('none')"> 고정</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk2rot-group"><input type="radio" name="lk2Rot" value="group" class="hidden" onclick="switchLk2Rot('group')"> 대분류 간만</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk2rot-item"><input type="radio" name="lk2Rot" value="item" class="hidden" onclick="switchLk2Rot('item')"> 대분류 안만</label>
+                                    <label class="chip preset-active flex-1 text-center py-2" id="btn-lk2rot-both"><input type="radio" name="lk2Rot" value="both" checked class="hidden" onclick="switchLk2Rot('both')"> 모두</label>
+                                </div>
+                            </div>
+                            <label class="opt" style="padding-left:0">
+                                <input type="checkbox" id="lk2Sbs" checked onchange="lk2SyncGroups()">
+                                <span><span class="opt-t">열을 하나씩 열기 (StepByStep)</span><span class="opt-s">첫 열만 보이고 화살표로 다음 열을 엽니다</span></span>
+                            </label>
+                        </div>
+                        <div class="card">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="fld-label" style="margin-bottom:0">행 대분류 구성</label>
+                                <button type="button" onclick="addLk2Group()" class="btn btn-sm btn-line">대분류 추가</button>
+                            </div>
+                            <div id="lk2Groups" class="space-y-1.5"></div>
+                            <div class="flex justify-between items-center mt-2 pt-2" style="border-top:1px solid var(--line)">
+                                <span class="text-xs" style="color:var(--ink-2)">행 합계 <b id="lk2Sum">0</b></span>
+                                <span id="lk2Hint" class="text-xs muted">원본을 넣어 주세요</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CASE 4 전용 -->
+                    <div id="lk4Box" class="hidden space-y-3">
+                        <div id="lk4Detect" style="font-size:11.5px;color:var(--ink-3);background:#FBFCFE;border:1px solid var(--line-2);border-radius:8px;padding:9px">
+                            원본을 넣으면 표 구조를 자동으로 읽습니다.
+                        </div>
+                        <div class="card">
+                            <label class="fld-label">앞 페이지 번호 (제시 순서를 가져올 곳)</label>
+                            <input type="text" id="lk4Pages" oninput="lk4Detect()" class="inp" style="font-family:var(--mono)" placeholder="예: 71, 73, 75, 77">
+                            <span class="fld-hint">
+                                로테이션되는 페이지 번호를 <b>보기 순서대로</b> 콤마로 적습니다.
+                                번호는 <b>파일명 뒤 숫자</b>입니다. 예) <b>148363_71.htm</b> → <b>71</b>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- CASE 5 전용 -->
+                    <div id="lk5Box" class="hidden space-y-3">
+                        <div id="lk5Detect" style="font-size:11.5px;color:var(--ink-3);background:#FBFCFE;border:1px solid var(--line-2);border-radius:8px;padding:9px">
+                            원본을 넣으면 표 구조를 자동으로 읽습니다.
+                        </div>
+                        <div class="card space-y-3">
+                            <div>
+                                <label class="fld-label">참조 방식</label>
+                                <div class="flex gap-2">
+                                    <label class="chip preset-active flex-1 text-center py-2" id="btn-lk5ref-sa"><input type="radio" name="lk5RefKind" value="sa" checked class="hidden" onclick="switchLk5Ref('sa')"> 척도 문항 여러 개</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk5ref-ma"><input type="radio" name="lk5RefKind" value="ma" class="hidden" onclick="switchLk5Ref('ma')"> 복수응답 한 개</label>
+                                </div>
+                                <span class="fld-hint" id="lk5RefHint">보기마다 문항이 따로 있고, 특정 보기를 고른 것만 남깁니다.</span>
+                            </div>
+                            <div>
+                                <label class="fld-label" id="lk5RefLabel">참조 문항 목록</label>
+                                <input type="text" id="lk5Ref" oninput="lk5Detect()" class="inp" style="font-family:var(--mono)" placeholder="예: Q133SA, Q134SA, Q135SA ...">
+                                <span class="fld-hint">원본 보기 순서와 <b>같은 순서</b>로 적어 주세요. 첫 번째가 1번 보기입니다.</span>
+                            </div>
+                            <div id="lk5ValBox">
+                                <label class="fld-label">선택으로 볼 값</label>
+                                <input type="text" id="lk5Val" value="2" class="inp" style="max-width:120px">
+                                <span class="fld-hint">참조 문항에서 이 값을 고른 보기만 남깁니다. 예) <b>2</b> = 알고 있다</span>
+                            </div>
+                            <div>
+                                <label class="fld-label">대분류 열 너비 (%)</label>
+                                <input type="number" id="lk5Width" value="10" min="5" max="40" class="inp" style="max-width:120px">
+                            </div>
+                            <div>
+                                <label class="fld-label">로테이션 방식</label>
+                                <div class="flex gap-2 flex-wrap">
+                                    <label class="chip preset-active flex-1 text-center py-2" id="btn-lk5rot-none"><input type="radio" name="lk5Rot" value="none" checked class="hidden" onclick="switchLk5Rot('none')"> 고정</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk5rot-group"><input type="radio" name="lk5Rot" value="group" class="hidden" onclick="switchLk5Rot('group')"> 대분류 간만</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk5rot-item"><input type="radio" name="lk5Rot" value="item" class="hidden" onclick="switchLk5Rot('item')"> 대분류 안만</label>
+                                    <label class="chip flex-1 text-center py-2" id="btn-lk5rot-both"><input type="radio" name="lk5Rot" value="both" class="hidden" onclick="switchLk5Rot('both')"> 모두</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="fld-label" style="margin-bottom:0">대분류 구성 <span class="text-xs muted font-normal">- 이름과 행 수를 위에서 아래 순서로</span></label>
+                                <button type="button" onclick="addLk5Group()" class="btn btn-sm btn-line">대분류 추가</button>
+                            </div>
+                            <div id="lk5Groups" class="space-y-1.5"></div>
+                            <div class="flex justify-between items-center mt-2 pt-2" style="border-top:1px solid var(--line)">
+                                <span class="text-xs" style="color:var(--ink-2)">행 합계 <b id="lk5Sum">0</b></span>
+                                <span id="lk5Hint" class="text-xs muted">원본을 넣어 주세요</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- CASE 3 전용 -->
                     <div id="lk3Box" class="hidden card space-y-3" style="border-left:3px solid var(--acc)">
                         <div id="lk3Detect" style="font-size:11.5px;color:var(--ink-3);background:#FBFCFE;border:1px solid var(--line-2);border-radius:8px;padding:9px">
@@ -1160,7 +1345,7 @@ html,body{margin:0;padding:0}
                         <span id="inputLabelText">원본 코드</span>
                         <span id="fileNameDisplay" class="hidden font-mono font-bold" style="font-size:10.5px;color:var(--ink-2);background:#E8EDF4;border-radius:5px;padding:2px 6px;letter-spacing:0"></span>
                     </div>
-                    <textarea id="inputHtml" onchange="autoFillTotalOptions(); if(activeCategory==='likert'&&currentLikertCase==='3') lk3Detect();" class="code w-full rounded-xl p-3 resize-none outline-none"
+                    <textarea id="inputHtml" onchange="autoFillTotalOptions(); if(activeCategory==='likert'){ if(currentLikertCase==='3') lk3Detect(); if(currentLikertCase==='2') lk2Detect(); if(currentLikertCase==='4') lk4Detect(); if(currentLikertCase==='5') lk5Detect(); }" class="code w-full rounded-xl p-3 resize-none outline-none"
                         style="height:132px;border:1px dashed #B9C4D4;background:#FBFCFE;color:var(--ink)"
                         placeholder="문항 파일(.htm)을 이 화면 아무 곳에나 끌어다 놓으세요."></textarea>
                 </div>
@@ -2332,6 +2517,7 @@ html,body{margin:0;padding:0}
 
             if(cat === 'random') {
                 document.getElementById('category-random').classList.remove('hidden');
+                backToSub('random');
                 
                 selectRandomCase(currentRandomCase);
             } else if(cat === 'text') {
@@ -2347,6 +2533,7 @@ html,body{margin:0;padding:0}
                 document.getElementById('singleFileUi').classList.remove('hidden');
             } else if(cat === 'likert') {
                 document.getElementById('category-likert').classList.remove('hidden');
+                backToSub('likert');
                 selectLikertCase(currentLikertCase);
                 
                 
@@ -2470,7 +2657,7 @@ html,body{margin:0;padding:0}
         // 랜덤 셀렉트 CASE 메뉴얼
         // ===============================================================
         const MANUALS = {
-          '0': { t:'단일 차원 쿼터 할당',
+          '0': { t:'쿼터가 BY 없이 집단만 있을 때',
             when:['쿼터 문항을 <b>아무 조건 없이</b> 모든 응답자에게 랜덤으로 제시할 때',
                   '집단1~집단N 중 하나를 목표 쿼터에 맞춰 자동으로 찍어야 할 때',
                   '앞 문항 참조가 필요 없을 때 <span class="sub">앞 문항을 봐야 한다면 CASE 1 또는 CASE 2</span>'],
@@ -2485,7 +2672,7 @@ html,body{margin:0;padding:0}
                + '<b>실사 중간에는 집단별 완료 수가 벌어져 보일 수 있습니다.</b> 배정이 목표에 닿기 전까지는 그렇고, '
                + '그 뒤 완료 기준 보충 단계가 돌면서 좁혀집니다. 끝까지 진행한 뒤에도 안 맞으면 알려 주세요.' },
 
-          '1': { t:'다차원 교차 쿼터 할당',
+          '1': { t:'쿼터가 BY 일 때',
             when:['성별·연령·지역별로 집단 선택이 <b>골고루</b> 찍혀야 할 때',
                   'BY 되는 쿼터가 1개든 4개 이상이든 상관없습니다',
                   '집단마다 목표 수가 다른 게 아니라 <b>그냥 균등</b>하게 나뉘면 될 때 <span class="sub">집단별 목표가 따로 있으면 CASE 5</span>'],
@@ -2498,7 +2685,7 @@ html,body{margin:0;padding:0}
             note:'<b>집단마다 목표 완료자 수가 다르면 이 CASE 가 아닙니다.</b> CASE 1 은 목표를 입력받지 않고 그냥 균등하게 나눕니다. '
                + '집단별로 목표가 다르면 <b>CASE 5</b> 를 쓰세요.' },
 
-          '2': { t:'기본 랜덤 추출',
+          '2': { t:'앞 문항 선택 보기 중 MAX 선택',
             when:['앞 문항에서 고른 보기 중 <b>MAX 개념으로 골고루</b> 선택되어야 할 때',
                   '우선 선택 기준(필수 보기)이 <b>없을 때</b>'],
             fld:[['참조 문항','앞의 복수응답 문항 ID. 예) <b>Q17MA</b>'],
@@ -2508,7 +2695,7 @@ html,body{margin:0;padding:0}
                  '후보가 동수일 때는 무작위로 갈라져 한쪽으로 몰리지 않습니다.'],
             note:null },
 
-          '3': { t:'다중 필수 추출',
+          '3': { t:'앞 문항 선택 보기 중 MAX 선택 + 필수',
             when:['앞 문항에서 고른 보기 중 MAX 개념으로 골고루 선택되어야 할 때',
                   '우선 선택 기준(필수 보기)이 <b>있을 때</b>',
                   '필수 보기는 <b>1개도 되고 여러 개도 됩니다.</b> 여러 개면 필수끼리도 골고루 선택됩니다'],
@@ -2520,7 +2707,7 @@ html,body{margin:0;padding:0}
                  '남은 자리는 나머지 후보 중 배정이 적은 순으로 채웁니다.'],
             note:'필수 보기 개수가 MAX 추출 수보다 많으면 일부 필수가 빠집니다. MAX를 필수 개수 이상으로 두세요.' },
 
-          '4': { t:'필수 포함 시 개수 가변',
+          '4': { t:'필수 보기가 걸리면 MAX 개수 늘리기',
             when:['CASE 3과 같은 상황에서',
                   '<b>필수 보기가 걸렸는지에 따라 MAX 개수가 달라져야</b> 할 때'],
             fld:[['참조 문항','앞의 복수응답 문항 ID'],
@@ -2532,7 +2719,7 @@ html,body{margin:0;padding:0}
                  '나머지 동작은 CASE 3과 같습니다.'],
             note:null },
 
-          '5': { t:'쿼터 비율 할당',
+          '5': { t:'앞 문항 선택 보기 중 1개 · 쿼터대로',
             when:['참조 문항이 <b>복수응답</b>인데 수작업 문항은 <b>단수(1개만 선택)</b>여야 할 때',
                   '<b>부족한 쿼터를 먼저 채워야</b> 할 때',
                   '예) 1번만 고른 사람이 3명, 2번만 고른 사람이 0명인 상황에서 1·2번을 모두 고른 사람이 오면 <b>2번</b>을 찍어 줍니다',
@@ -2546,7 +2733,7 @@ html,body{margin:0;padding:0}
             note:'수작업 문항이 <b>여러 개를 선택하는 형태(MAX 2 이상)</b>라면 이 CASE 가 아닙니다. '
                + 'CASE 2~4 를 쓰세요. 목표 쿼터를 비워 두면 빌드가 막히고, 몇 번 보기가 비었는지 알려 드립니다.' },
 
-          '7': { t:'교차 쿼터 지정',
+          '7': { t:'쿼터가 BY 이고 집단별 목표가 다를 때',
             when:['<b>셀마다 집단별 목표가 다를 때</b> (성별×연령 등)',
                   '어떤 셀에서는 <b>특정 집단을 아예 배정하면 안 될 때</b> (목표 0)',
                   '집단별 총합이 크게 차이 날 때 <span class="sub">예) 집단1은 39명, 집단2는 7명</span>',
@@ -2563,7 +2750,7 @@ html,body{margin:0;padding:0}
                + '셀 라벨의 숫자는 <b>참조 문항의 보기 번호</b>입니다. 연령 문항 보기가 <b>1=20대, 2=30대…</b> 순서라면 표의 1·2 도 그 뜻입니다. '
                + '보기 순서가 다르면 엉뚱한 셀에 쿼터가 걸리니 확인해 주세요.' },
 
-          '6': { t:'순차 배타 추출',
+          '6': { t:'여러 페이지에 겹치지 않게 1개씩',
             when:['수작업 문항이 <b>2개 이상</b> 필요한데 각각 단일 선택으로 구성해야 할 때',
                   '뒤에 반복 문항이 많아 서로 겹치면 안 될 때'],
             fld:[['파일 첨부','수작업이 필요한 단일 문항 파일을 <b>한꺼번에</b> 끌어다 놓으세요.<span class="sub">페이지가 앞인 문항일수록 수작업문항_1 쪽으로 자동 배치됩니다.</span>'],
@@ -2654,7 +2841,37 @@ html,body{margin:0;padding:0}
         };
 
         const MANUALS_LIKERT = {
-          '3': { t:'열 순서 무작위 (표 연동)',
+          '5': { t:'가로테이블 리커트척도 대분류 추가 + 참조 선택 보기만 제시',
+            when:['가로 리커트 문항에 <b>대분류 칸을 붙이고</b>, 앞 문항에서 고른 보기만 남겨야 할 때',
+                  '한 보기도 고르지 않은 대분류는 <b>통째로 빼야</b> 할 때',
+                  '남은 보기 수에 맞춰 대분류 칸 높이가 <b>자동으로 맞춰져야</b> 할 때'],
+            fld:[['참조 방식','<b>척도 문항 여러 개</b> — 보기마다 문항이 하나씩 있고 특정 값을 고른 것만 남깁니다.<br><b>복수응답 한 개</b> — 한 문항의 응답 비트열을 읽습니다.'],
+                 ['참조 문항','원본 보기 순서와 <b>같은 순서</b>로 적습니다. 첫 번째가 1번 보기입니다.<span class="sub">척도 방식이면 보기 수만큼, 복수응답이면 하나만 적습니다.</span>'],
+                 ['선택으로 볼 값','척도 방식일 때만 씁니다. 예) <b>2</b> = 알고 있다<span class="sub">앞뒤 공백은 자동으로 정리해서 비교합니다.</span>'],
+                 ['대분류 열 너비','보통 <b>10</b>% 정도. 문항 칸 너비는 그만큼 자동으로 줄어듭니다.'],
+                 ['로테이션 방식','고정 / 대분류 간만 / 대분류 안만 / 모두<span class="sub">기본은 <b>고정</b>입니다. 필요할 때만 켜세요.</span>'],
+                 ['대분류 구성','이름과 <b>행 수</b>를 위에서 아래 순서대로.<span class="sub">행 수 합계가 원본 보기 수와 같아야 합니다. 이름은 설문지를 보고 직접 적습니다.</span>']],
+            out:['참조 문항 응답을 읽어 <b>고른 보기만</b> 대분류별 목록에 담습니다.',
+                 '목록이 빈 대분류는 <b>행을 만들지 않습니다.</b> 화면에서 통째로 사라집니다.',
+                 '대분류 칸의 <b>rowspan</b> 이 남은 보기 수로 자동 계산됩니다.',
+                 '문항 ID 는 원본의 <b>name 을 그대로</b> 씁니다. 번호가 연속이 아니어도 되고, 순서가 바뀌어도 값이 따라갑니다.'],
+            note:'참조 문항에서 <b>한 보기도 고르지 않으면</b> 표가 비게 됩니다. 앞에 "하나라도 아는 것이 있는 사람만" 같은 필터가 있는지 확인하세요.<br>'
+               + '값을 비교할 때 <b>Trim</b> 으로 앞뒤 공백을 정리합니다. 손으로 만들 때 자주 나는 공백 오타를 막습니다.' },
+
+          '4': { t:'앞 페이지 제시 순서에 따라 보기 순서 로테이션',
+            when:['앞에서 <b>로테이션되어 제시된 페이지</b>가 있고, 그 순서대로 보기를 배치해야 할 때',
+                  '예) 컨셉 4개를 각각 다른 페이지로 보여준 뒤, 선호도 문항에서 <b>본 순서대로</b> 보여주기',
+                  '이 페이지에서 새로 섞는 것이 아니라 <b>앞에서 정해진 순서를 그대로</b> 씁니다'],
+            fld:[['앞 페이지 번호','제시 순서를 가져올 페이지 번호를 <b>보기 순서대로</b> 콤마로. 예) <b>71, 73, 75, 77</b>'
+                 + '<span class="sub">번호는 <b>파일명 뒤 숫자</b>입니다. 예) 148363_71.htm → 71. 첫 번째 번호가 보기1, 두 번째가 보기2 에 대응합니다.</span>']],
+            out:['사내 <b>페이지 로테이션 기록(emPageRotationInfo)</b>에서 이 응답자가 본 순서를 읽어 옵니다.',
+                 '원본 표의 <b>행·열 배치를 그대로</b> 두고 칸 안의 내용만 그 순서대로 채웁니다. 2행 2열이든 1행 4열이든 상관없습니다.',
+                 '제목·이미지·라디오가 <b>한 덩어리로</b> 움직입니다.',
+                 '<b>문항 ID 와 value 는 보기에 고정</b>이라, 순서가 바뀌어도 같은 보기는 같은 값으로 쌓입니다.'],
+            note:'순서를 읽지 못하면 <b>화면을 만들지 않고 멈춥니다.</b> (관리자에게 문의 바랍니다) 엉뚱한 순서로 나가는 것을 막기 위한 장치입니다.<br>'
+               + '페이지 번호와 보기 개수가 다르면 빌드가 막힙니다. 번호 순서가 보기 번호와 맞는지 화면에서 확인하세요.' },
+
+          '3': { t:'척도 문항에서 척도 열 라벨과 문항 가운데 표의 순서가 맞도록 로테이션',
             when:['위 <b>제시표</b>(이미지·설명)와 아래 <b>문항표</b>의 열 순서를 <b>똑같이</b> 섞어야 할 때',
                   '제시 순서에 따른 편향을 없애야 할 때',
                   '제시표 없이 <b>문항표만</b> 섞어도 됩니다'],
@@ -2666,15 +2883,22 @@ html,body{margin:0;padding:0}
             note:'표에 <b>병합된 칸(rowspan·colspan)</b>이 있으면 만들 수 없습니다. 칸 수가 다른 행이 있으면 알려 드립니다.<br>'
                + '제시표가 3행 3열이든 2행 4열이든 상관없습니다. 다만 <b>제시표의 열 수</b>와 <b>문항표에서 섞을 열 수</b>는 같아야 합니다.' },
 
-          '2': { t:'열 제어 + 행 대분류 로테이션',
+          '2': { t:'구조파이핑 세로테이블 다중선택형 보기 대분류 로테이션',
             when:['앞 문항에서 고른 것만 <b>열로 보여줘야</b> 할 때 (예: 응답한 브랜드만)',
-                  '행을 대분류로 묶어 <b>대분류 간·대분류 내</b> 모두 섞어야 할 때',
+                  '행을 대분류로 묶어 <b>대분류 간·대분류 내</b> 순서를 섞어야 할 때',
                   '열을 하나씩 열어 가며 응답받아야 할 때 (StepByStep)'],
-            fld:[['준비 중','다음 단계에서 추가됩니다.']],
-            out:['준비 중입니다.'],
-            note:'아직 만들지 않았습니다. <b>CASE 1</b> 또는 <b>CASE 3</b> 을 사용해 주세요.' },
+            fld:[['참조 문항','열을 고르는 <b>복수응답</b> 문항 ID. 예) <b>Q72MA</b><span class="sub">응답 비트열을 읽어 고른 열만 보여 줍니다. <b>비워 두면 빌드가 막힙니다.</b></span>'],
+                 ['행 로테이션 방식','고정 / 대분류 간만 / 대분류 안만 / 모두'],
+                 ['열을 하나씩 열기','켜면 <b>첫 열만 보이고</b> 화살표로 다음 열을 엽니다.<span class="sub">원본 표에 입력칸 없는 행(화살표 자리)이 있어야 만들어집니다.</span>'],
+                 ['행 대분류 구성','대분류 이름과 <b>행 수</b>를 위에서 아래 순서대로.<span class="sub">행 수 합계가 원본 보기 수와 같아야 합니다. 다르면 빌드가 막힙니다.</span>']],
+            out:['원본을 넣으면 <b>열 이름·문항 ID·보기 수를 자동으로 읽습니다.</b>',
+                 '사내 라이브러리(<b>inArray · RandomList · RandomRot</b>)를 파일에 함께 넣어 순서를 섞습니다.',
+                 '<b>문항 ID 와 보기 번호는 고정입니다.</b> 화면 순서가 바뀌어도 같은 브랜드·같은 보기는 같은 자리에 쌓입니다.',
+                 '참조 문항에서 아무것도 고르지 않은 경우 <b>모든 열을 보여 줍니다.</b> 빈 화면이 나가지 않습니다.'],
+            note:'열 문항 ID 는 원본의 <b>name 속성을 그대로</b> 읽습니다. 번호가 연속이 아니어도 됩니다.<br>'
+               + '입력칸이 없는 행은 <b>화살표 행</b>으로 보고 원본 내용을 버립니다. 원본에 잘못 들어간 문구가 있어도 결과에 남지 않습니다.' },
 
-          '1': { t:'행 대분류 + 세트 로테이션',
+          '1': { t:'가로테이블 리커트척도 대분류 로테이션',
             when:['리커트 문항을 <b>세트로 묶어</b> 보여줘야 할 때',
                   '순서 효과를 없애려고 <b>세트 순서나 세트 안 문항 순서를 무작위</b>로 돌려야 할 때',
                   '표 왼쪽에 대분류 칸을 병합해 넣어야 할 때'],
@@ -2689,6 +2913,12 @@ html,body{margin:0;padding:0}
                + '<b>미리보기</b>로 세트 묶음이 맞는지 확인한 뒤 만드세요.' }
         };
 
+        const CASE_NO = { random:{'0':'1-1','1':'1-2','5':'1-3','7':'1-4','2':'2-1','3':'2-2','4':'2-3','6':'2-4'},
+                          likert:{'1':'1-1','3':'1-2','5':'1-3','2':'2-1','4':'3-1'} };
+        function caseNo(cat, n) {
+            return (CASE_NO[cat] && CASE_NO[cat][n]) ? CASE_NO[cat][n] : String(n).padStart(2, '0');
+        }
+
         function openManual(n) {
             const BOOK = activeCategory === 'text' ? MANUALS_TEXT
                        : activeCategory === 'likert' ? MANUALS_LIKERT
@@ -2696,7 +2926,7 @@ html,body{margin:0;padding:0}
                        : MANUALS;
             const m = BOOK[n];
             if (!m) return;
-            document.getElementById('manNum').innerText = String(n).padStart(2, '0');
+            document.getElementById('manNum').innerText = caseNo(activeCategory, n);
             document.getElementById('manTitle').innerText = m.t;
             let h = '<div class="man-sec"><h4>이런 때 씁니다</h4><ul>'
                   + m.when.map(x => '<li>' + x + '</li>').join('') + '</ul></div>';
@@ -2790,6 +3020,10 @@ html,body{margin:0;padding:0}
             const banner = document.getElementById('buildStatus');
             if (!ok && banner && banner.className === 'hidden' && out && !out.value) {
                 showBuildStatus('결과가 만들어지지 않았습니다. 입력값을 확인해 주세요.', 'error');
+            }
+            if (ok) {
+                try { statBump(activeCategory, statCurCase()); } catch (e) {}
+                try { statSend(activeCategory, statCurCase()); } catch (e) {}
             }
             return ok;
         }
@@ -2926,9 +3160,18 @@ html,body{margin:0;padding:0}
             });
             const one = document.getElementById('lk1Box');
             if (one) one.classList.toggle('hidden', t !== '1');
+            const five = document.getElementById('lk5Box');
+            if (five) five.classList.toggle('hidden', t !== '5');
+            if (t === '5') lk5Detect();
+            const four = document.getElementById('lk4Box');
+            if (four) four.classList.toggle('hidden', t !== '4');
+            if (t === '4') lk4Detect();
+            const two = document.getElementById('lk2Box');
+            if (two) two.classList.toggle('hidden', t !== '2');
             const three = document.getElementById('lk3Box');
             if (three) three.classList.toggle('hidden', t !== '3');
             if (t === '3') lk3Detect();
+            if (t === '2') lk2Detect();
         }
 
 
@@ -2964,7 +3207,14 @@ html,body{margin:0;padding:0}
             }
 
             const key = 'RT' + (LK3.qTable.id || 'T').replace(/[^A-Za-z0-9]/g, '');
-            const esc = s => String(s).replace(/"/g, '""');
+            // VBScript 문자열 리터럴은 여러 줄에 걸칠 수 없다.
+            // 줄바꿈·탭을 공백으로 접고 연속 공백을 줄인 뒤 따옴표를 이스케이프한다.
+            const esc = s => String(s)
+                .replace(/\r/g, '')
+                .replace(/[\n\t]+/g, ' ')
+                .replace(/ {2,}/g, ' ')
+                .trim()
+                .replace(/"/g, '""');
 
             // 원래 내용을 자리별로 보관하고, 표에는 <%= %> 를 심는다
             const store = [];   // {varBase, contents[C]}
@@ -3024,6 +3274,1292 @@ html,body{margin:0;padding:0}
                 + ' &nbsp;·&nbsp; 치환 자리 <b>' + (store.length * C) + '곳</b>'
                 + ' &nbsp;·&nbsp; 문항 <b>' + LK3.qNames.length + '개</b>', 'ok');
             return true;
+        }
+
+
+
+        // ══════ CASE 2 생성 ══════
+        function generateLikertCase2() {
+            const html = document.getElementById('inputHtml').value;
+            if (!html.trim()) { showBuildStatus('원본 HTM 코드가 비어 있습니다.', 'error'); return false; }
+            lk2Detect();
+            if (!LK2) { showBuildStatus('라디오·체크박스가 있는 표를 찾지 못했습니다.', 'error'); return false; }
+
+            const ref = document.getElementById('lk2Ref').value.trim();
+            const rot = lk2Rot();
+            const sbs = document.getElementById('lk2Sbs').checked;
+            const grps = lk2Groups();
+            const N = LK2.itemRows.length, C = LK2.cols;
+            const tot = grps.reduce((a, g) => a + g.span, 0);
+
+            if (!grps.length) vErr('<b>행 대분류</b>를 최소 1개 설정해 주세요.');
+            else if (tot !== N) vErr('대분류 행 수의 합(<b>' + tot + '</b>)이 원본 보기 수(<b>' + N + '</b>)와 다릅니다.');
+            if (LK2.names.some(n => !n)) vErr('열의 <b>문항 ID</b>를 읽지 못했습니다. 원본을 확인해 주세요.');
+            if (!ref) vErr('<b>참조 문항</b>을 입력해 주세요. 예) Q72MA'
+                        + '<span class="sub">이 문항 응답에 따라 보여 줄 열이 정해집니다. 비워 두면 열 제어가 되지 않습니다.</span>');
+            else if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(ref)) vWarn('참조 문항 <b>' + ref + '</b>의 형식을 확인해 주세요.');
+            if (grps.length < 2 && (rot === 'group' || rot === 'both'))
+                vWarn('대분류가 1개뿐이라 <b>대분류 간 로테이션</b>은 효과가 없습니다.');
+            if (vStop()) return false;
+
+            const key = 'RC' + (LK2.table.id || 'T').replace(/[^A-Za-z0-9]/g, '');
+            const NL = '\r\n';
+            const esc = s => String(s).replace(/\r/g, '').replace(/[\n\t]+/g, ' ')
+                                      .replace(/ {2,}/g, ' ').trim().replace(/"/g, '""');
+
+            // 대분류 경계 (보기 번호 기준)
+            const ranges = []; let at = 1;
+            grps.forEach(g => { ranges.push([at, at + g.span - 1]); at += g.span; });
+
+            const LIB = `Function inArray(chkArray,chkValue)
+	dim i
+	inArray = false
+
+	for i = 0 to uBound(chkArray)
+		if (chkArray(i) = chkValue) then
+			inArray = true
+		end if
+	next
+end Function
+
+
+'Function RandomList(ArraySource,Gubun,Inja)
+'Radom Rotation 
+Function RandomList(ArraySource,Inja)
+
+	listLength = CInt(uBound(ArraySource))	
+	Randomize 		
+	MyValue = Int(((listLength +1) * Rnd) + 1) 
+
+	dim actionArray()
+	redim actionArray(listLength+1)
+	z=0
+	for i = 0 to listLength
+		tmFlag = true
+		do while tmFlag
+			if not(inArray(actionArray,MyValue)) then
+				actionArray(z) = MyValue
+				z = z + 1
+				tmFlag = false
+			end If			
+			MyValue = Int(((listLength +1) * Rnd) + 1)
+		loop
+	Next
+	
+'	If Gubun = 0 then
+'		z = actionArray(0)-1
+'		VarTEXT = ArraySource(z)
+'		for i = 1 to uBound(actionArray) - 1
+'			z = actionArray(i) - 1		
+'			VarTEXT = VarTEXT & Inja & ArraySource(z)
+'		Next
+'		RandomList = VarTEXT
+'	Else
+		VarTEXT = ""
+		for i = 0 to uBound(actionArray) - 1
+			z = actionArray(i) - 1		
+			VarTEXT = VarTEXT & Inja & ArraySource(z)
+		Next
+		RandomList = VarTEXT
+'	End If 	
+End Function
+
+
+'st : 시작 
+'en : 마지막
+'ty : type ::: 1 = 하나만, 2 = 두개, 3 = 
+
+Function RandomRot(ty,st_en1,st_en2)
+
+roList01 = ""
+roList02 = "" 
+
+	If ty = 1 Then 	
+		rotOk = "@1@2" 
+
+		rotOk = Split(rotOk,"@")
+	ElseIf ty = 2 Then 
+		rotOk = "1@2"
+		rotOk = Split(rotOk,"@")
+		rotOk = RandomList(rotOk,"@")
+
+		rotOk = Split(rotOk,"@")
+	End If 
+
+	'1개 ROT
+	If st_en1 <> "" Then  
+
+		list_st_en1 = Split(st_en1,"-")
+
+		If UBound(list_st_en1) > 0 Then 
+			For i = list_st_en1(0) To list_st_en1(1)
+				If roList01 = "" Then 
+					roList01 = i
+				Else 
+					roList01 = roList01 & "@" & i
+				End If 
+			Next 
+		Else
+			roList01 = st_en1
+		End If 
+		
+		ArrList01 = split(roList01, "@")
+		rotmList01 = RandomList(ArrList01,"@")
+
+	End If 
+
+	'2개 ROT
+	If st_en2 <> "" Then  
+
+		list_st_en2 = Split(st_en2,"-")
+
+		If UBound(list_st_en2) > 0 Then 
+			For i = list_st_en2(0) To list_st_en2(1)
+				If roList02 = "" Then 
+					roList02 = i
+				Else 
+					roList02 = roList02 & "@" & i
+				End If 
+			Next 
+		Else
+			roList02 = st_en2
+		End If 
+		
+		ArrList02 = split(roList02, "@")
+		rotmList02 = RandomList(ArrList02,"@")
+
+	End If 
+ 
+
+	If rotmList02 <> "" Then  
+		If rotOk(1) = "1" Then 
+			RotList01 = rotmList01 & rotmList02
+		Else
+			RotList01 = rotmList02 & rotmList01
+		End If 
+	Else
+		RotList01 = rotmList01
+	End If 
+ 
+	RandomRot = RotList01
+
+End Function 
+%>
+<%`;
+            let a = '<!-- #include virtual="/include/i_db.asp"-->' + NL + '<%' + NL;
+            a += "' [대분류 로테이션 CASE 2] 앞 문항으로 열을 걸러내고, 행을 대분류로 묶어 섞는다." + NL;
+            a += "'  문항 ID 는 보기에 고정되므로 순서가 바뀌어도 같은 보기는 같은 값으로 쌓인다." + NL + NL;
+            a += 'TxtMode = request("TxtMode")' + NL + 'TxtSurveyID = request("TxtSurveyID")' + NL;
+            a += 'TxtPanelID = request("TxtPanelID")' + NL + NL;
+            a += 'if TxtMode <> "" then' + NL + '\ttblName = "tmRespondanswer"' + NL + 'else' + NL
+               + '\ttblName = "emRespondanswer" ' + NL + 'end if' + NL + NL;
+            a += LIB.replace(/\r/g, '').split('\n').join(NL) + NL + NL;
+
+            // 열 목록
+            a += "' 1. 보여 줄 열 고르기" + NL;
+            a += 'Dim ' + key + 'Col(' + C + ')' + NL;
+            LK2.names.forEach((n, i) => { a += key + 'Col(' + (i + 1) + ') = "' + n + '"' + NL; });
+            a += NL + 'preList = ""' + NL;
+            if (ref) {
+                a += 'sql_r = "SELECT AnsValue FROM " & tblName & " WHERE SurveyID = \'" & TxtSurveyID & "\' AND " & _' + NL;
+                a += '\t\t" panelid = \'" & TxtPanelID & "\' and ANSNO = \'' + ref + '\' "' + NL;
+                a += 'Set rs_r = Server.CreateObject("ADODB.Recordset")' + NL + 'rs_r.open sql_r, i_db,1,3' + NL;
+                a += 'refVal = ""' + NL;
+                a += 'If Not(rs_r.Eof Or rs_r.Bof) Then refVal = rs_r("AnsValue") & ""' + NL;
+                a += 'Set rs_r = Nothing' + NL + NL;
+                a += 'For i = 1 To ' + C + NL;
+                a += '\tIf Len(refVal) >= i Then' + NL;
+                a += '\t\tIf Mid(refVal, i, 1) = "1" Then preList = preList & "@" & i' + NL;
+                a += '\tEnd If' + NL + 'Next' + NL;
+                a += "' 고른 열이 하나도 없으면 전부 보여 준다 (빈 화면 방지)" + NL;
+                a += 'If preList = "" Then' + NL;
+                a += '\tFor i = 1 To ' + C + NL + '\t\tpreList = preList & "@" & i' + NL + '\tNext' + NL + 'End If' + NL;
+            } else {
+                a += 'For i = 1 To ' + C + NL + '\tpreList = preList & "@" & i' + NL + 'Next' + NL;
+            }
+            a += key + 'B = Split(preList, "@")' + NL + NL;
+
+            // 행 순서
+            a += "' 2. 행 순서 정하기" + NL;
+            const gList = '1-' + grps.length;
+            if (rot === 'both' || rot === 'group') a += key + 'G = Split(RandomRot(1,"' + gList + '",""), "@")' + NL;
+            else a += key + 'G = Split("@' + Array.from({length: grps.length}, (_, i) => i + 1).join('@') + '", "@")' + NL;
+            a += 'Dim ' + key + 'R(' + grps.length + ')' + NL;
+            ranges.forEach((r, i) => {
+                const span = r[1] - r[0] + 1;
+                if ((rot === 'both' || rot === 'item') && span > 1)
+                    a += key + 'R(' + (i + 1) + ') = RandomRot(1,"' + r[0] + '-' + r[1] + '","")' + NL;
+                else {
+                    let s = '';
+                    for (let v = r[0]; v <= r[1]; v++) s += '@' + v;
+                    a += key + 'R(' + (i + 1) + ') = "' + s + '"' + NL;
+                }
+            });
+            a += '%>' + NL;
+
+            // 표 다시 그리기
+            const headCells = LK2.head.map(e => e.outerHTML);
+            const labelCells = LK2.itemRows.map(tr => tr.children[0].outerHTML);
+            const inputCells = LK2.itemRows.map(tr => [...tr.children].slice(1).map(e => e.outerHTML));
+            const sbsCell = LK2.sbsRows.length ? [...LK2.sbsRows[0].children].slice(1)[0].outerHTML : '';
+
+            let body = '';
+            body += '<tr>' + NL + headCells[0] + NL;
+            body += '<% For a = 1 To UBound(' + key + 'B) %>' + NL;
+            body += '<% Select Case CInt(' + key + 'B(a)) %>' + NL;
+            LK2.colLabels.forEach((lb, i) => {
+                body += '<% Case ' + (i + 1) + ' %>' + NL + headCells[i + 1] + NL;
+            });
+            body += '<% End Select %>' + NL + '<% Next %>' + NL + '</tr>' + NL;
+
+            body += '<% For i = 1 To UBound(' + key + 'G) %>' + NL;
+            body += '<% tmp = Split(' + key + 'R(CInt(' + key + 'G(i))), "@") %>' + NL;
+            body += '<% For j = 1 To UBound(tmp) %>' + NL;
+            body += '<tr>' + NL;
+            body += '<% Select Case CInt(tmp(j)) %>' + NL;
+            labelCells.forEach((lc, r) => { body += '<% Case ' + (r + 1) + ' %>' + NL + lc + NL; });
+            body += '<% End Select %>' + NL;
+            body += '<% For a = 1 To UBound(' + key + 'B) %>' + NL;
+            body += '<% Select Case CInt(tmp(j)) * 100 + CInt(' + key + 'B(a)) %>' + NL;
+            inputCells.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    body += '<% Case ' + ((r + 1) * 100 + (c + 1)) + ' %>' + NL + cell + NL;
+                });
+            });
+            body += '<% End Select %>' + NL + '<% Next %>' + NL;
+            body += '</tr>' + NL;
+            body += '<% Next %>' + NL + '<% Next %>' + NL;
+
+            if (sbs && sbsCell) {
+                body += '<tr>' + NL + (LK2.sbsRows.length ? LK2.sbsRows[0].children[0].outerHTML.replace(/>[^<]*</, '>&nbsp;<') : '<td>&nbsp;</td>') + NL;
+                body += '<% For a = 1 To UBound(' + key + 'B) %>' + NL;
+                body += sbsCell + NL;
+                body += '<% Next %>' + NL + '</tr>' + NL;
+            }
+
+            // 표 안을 새 본문으로 교체
+            const tb = LK2.table.querySelector('tbody') || LK2.table;
+            tb.innerHTML = '@@LK2BODY@@';
+            const out = a + LK2.div.innerHTML.replace('@@LK2BODY@@', body);
+
+            document.getElementById('outputHtml').value = out;
+            const rotTxt = { none:'고정', group:'대분류 간만', item:'대분류 안만', both:'모두' }[rot];
+            showBuildStatus('빌드 완료 &nbsp;·&nbsp; 열 제어 + 대분류 로테이션 &nbsp;·&nbsp; 열 <b>' + C + '개</b>'
+                + ' &nbsp;·&nbsp; 보기 <b>' + N + '개</b> &nbsp;·&nbsp; 대분류 <b>' + grps.length + '개</b>'
+                + ' &nbsp;·&nbsp; 로테이션 <b>' + rotTxt + '</b>'
+                + (ref ? ' &nbsp;·&nbsp; 참조 <b>' + ref + '</b>' : '')
+                + (sbs && sbsCell ? ' &nbsp;·&nbsp; StepByStep' : ''), 'ok');
+            return true;
+        }
+
+
+
+
+
+
+        // ═══════════════════════════════════════════════════════════
+        //  사용 기록 서버 전송 (구글 스프레드시트)
+        //
+        //  ▶ 관리자만 손보는 곳입니다. 아래 STAT_URL 에 배포 주소를 넣으면
+        //    이 파일을 쓰는 모든 사람의 기록이 한 시트에 모입니다.
+        //    비워 두면 아무것도 보내지 않고 이 PC 에만 쌓입니다.
+        //
+        //  ▶ 보내는 것 : 날짜 · 카테고리 · CASE 번호 · 툴 버전
+        //    보내지 않는 것 : 이름, PC 정보, 문항 내용, 파일 — 절대 나가지 않습니다.
+        //
+        //  ▶ 전송이 막히거나 실패해도 코드 만들기에는 아무 영향이 없습니다.
+        // ═══════════════════════════════════════════════════════════
+        const STAT_URL = 'https://script.google.com/macros/s/AKfycbxMOHAhfrv6VPYnMOwqU8wb3fJCBAv2Vwln5ElUx6PnH6fehaGUJHfAwtAQln20AP3Whw/exec';
+
+        function statSend(cat, no) {
+            if (!STAT_URL) return;
+            try {
+                const c = GUIDE_CASES.find(x => x.cat === cat && x.no === String(no)) || {};
+                const q = '?cat=' + encodeURIComponent(c.label || cat)
+                        + '&no=' + encodeURIComponent(caseNo(cat, no))
+                        + '&name=' + encodeURIComponent(c.name || '')
+                        + '&ver=' + encodeURIComponent(TOOL_VER)
+                        + '&t=' + Date.now();
+                if (window.fetch) {
+                    fetch(STAT_URL + q, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(function(){});
+                } else {
+                    new Image().src = STAT_URL + q;
+                }
+            } catch (e) { /* 전송 실패는 무시한다 */ }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  사용 기록 (관리자 전용)
+        //  · 코드가 실제로 만들어진 경우만 셉니다.
+        //  · 기록은 이 PC 의 이 브라우저에만 쌓입니다. (서버 없음)
+        //  · 암호를 바꾸려면 아래 STAT_PW 값을 새 암호의 해시로 바꾸세요.
+        //    해시는 기록 화면의 [암호 해시 만들기] 로 구할 수 있습니다.
+        // ═══════════════════════════════════════════════════════════
+        const TOOL_VER = 'v9.3';
+        const STAT_KEY = 'OQ70_STAT_v1';
+        let STAT_PW = 578595637;          // 기본 암호 : @@70admin
+
+        function oqHash(s) {
+            let h = 5381;
+            for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+            return h;
+        }
+        function statLoad() {
+            try { return JSON.parse(localStorage.getItem(STAT_KEY) || '{}'); }
+            catch (e) { return {}; }
+        }
+        function statSave(d) {
+            try { localStorage.setItem(STAT_KEY, JSON.stringify(d)); return true; }
+            catch (e) { return false; }
+        }
+        function statBump(cat, no) {
+            const d = statLoad();
+            if (!d.cases) d.cases = {};
+            if (!d.days) d.days = {};
+            if (!d.from) d.from = new Date().toISOString().slice(0, 10);
+            const k = cat + '/' + no;
+            const today = new Date().toISOString().slice(0, 10);
+            if (!d.cases[k]) d.cases[k] = { n: 0, last: '' };
+            d.cases[k].n++;
+            d.cases[k].last = today;
+            d.days[today] = (d.days[today] || 0) + 1;
+            statSave(d);
+        }
+        function statCurCase() {
+            if (activeCategory === 'random') return currentRandomCase;
+            if (activeCategory === 'text') return currentTextCase;
+            if (activeCategory === 'likert') return currentLikertCase;
+            return '1';
+        }
+
+        function openStat() {
+            document.getElementById('statModal').classList.remove('hidden');
+            document.getElementById('stLock').classList.remove('hidden');
+            document.getElementById('stView').classList.add('hidden');
+            document.getElementById('stErr').classList.add('hidden');
+            document.getElementById('stPw').value = '';
+            setTimeout(() => document.getElementById('stPw').focus(), 60);
+        }
+        function closeStat() { document.getElementById('statModal').classList.add('hidden'); }
+        function stUnlock() {
+            const v = document.getElementById('stPw').value;
+            if (oqHash(v) !== STAT_PW) {
+                const e = document.getElementById('stErr');
+                e.innerText = '암호가 맞지 않습니다.';
+                e.classList.remove('hidden');
+                return;
+            }
+            document.getElementById('stLock').classList.add('hidden');
+            document.getElementById('stView').classList.remove('hidden');
+            statDraw();
+        }
+
+        function statName(cat, no) {
+            const c = GUIDE_CASES.find(x => x.cat === cat && x.no === no);
+            return c ? { label: c.label, name: c.name } : { label: cat, name: 'CASE ' + no };
+        }
+        function statDraw() {
+            const d = statLoad();
+            const cs = d.cases || {};
+            const keys = Object.keys(cs);
+            const tot = keys.reduce((a, k) => a + cs[k].n, 0);
+            const box = document.getElementById('stView');
+            let h = '';
+            if (!tot) {
+                h += '<div class="gd-none">아직 기록이 없습니다.<br>코드를 만들 때마다 이 화면에 쌓입니다.</div>';
+            } else {
+                const days = Object.keys(d.days || {}).sort();
+                h += '<div class="st-sum">모두 <b>' + tot + '번</b> 만들었습니다.'
+                   + ' &nbsp;·&nbsp; 집계 시작 <b>' + (d.from || days[0] || '-') + '</b>'
+                   + ' &nbsp;·&nbsp; 마지막 <b>' + (days[days.length - 1] || '-') + '</b><br>'
+                   + '<b style="color:var(--danger)">이 기록은 이 PC 의 이 브라우저에만 쌓입니다.</b>'
+                   + ' 부서 전체를 보시려면 각자 <b>기록 내보내기</b> 한 값을 받아 <b>합치기</b> 하세요.</div>';
+                const max = Math.max(...keys.map(k => cs[k].n));
+                h += '<table class="st-tbl"><thead><tr><th style="width:88px">카테고리</th><th style="width:52px">CASE</th>'
+                   + '<th>이름</th><th style="width:120px">횟수</th><th style="width:86px">마지막</th></tr></thead><tbody>';
+                keys.sort((a, b) => cs[b].n - cs[a].n).forEach(k => {
+                    const p = k.split('/'), nm = statName(p[0], p[1]);
+                    h += '<tr><td>' + nm.label + '</td><td><b>' + caseNo(p[0], p[1]) + '</b></td>'
+                       + '<td style="color:var(--ink-3)">' + nm.name + '</td>'
+                       + '<td><div style="display:flex;align-items:center;gap:7px"><b>' + cs[k].n + '</b>'
+                       + '<div class="st-bar" style="flex:1"><i style="width:' + Math.round(cs[k].n / max * 100) + '%"></i></div></div></td>'
+                       + '<td style="color:var(--ink-4)">' + cs[k].last + '</td></tr>';
+                });
+                h += '</tbody></table>';
+                const unused = GUIDE_CASES.filter(c => !cs[c.cat + '/' + c.no]);
+                if (unused.length) {
+                    h += '<div class="st-sum" style="margin-top:12px">한 번도 쓰지 않은 CASE <b>' + unused.length + '개</b> : '
+                       + unused.map(c => c.label + ' ' + caseNo(c.cat, c.no)).join(' · ') + '</div>';
+                }
+            }
+            h += '<div class="st-sum" style="margin-top:14px;padding-top:11px;border-top:1px solid var(--line)">'
+               + (STAT_URL
+                    ? '<b style="color:var(--ok)">모아 보기 켜짐</b> — 이 파일을 쓰는 모든 사람의 기록이 스프레드시트로 갑니다.'
+                    : '<b style="color:var(--ink-4)">모아 보기 꺼짐</b> — 지금은 이 PC 에만 쌓입니다. 파일의 <b>STAT_URL</b> 에 배포 주소를 넣으면 켜집니다.')
+               + '</div>';
+            h += '<div style="margin-top:16px;display:flex;gap:6px;flex-wrap:wrap">'
+               + '<button type="button" class="btn btn-sm btn-dark" onclick="statExport()">기록 내보내기</button>'
+               + '<button type="button" class="btn btn-sm btn-line" onclick="statMergeUI()">기록 합치기</button>'
+               + '<button type="button" class="btn btn-sm btn-line" onclick="statPwUI()">암호 해시 만들기</button>'
+               + (STAT_URL ? '<button type="button" class="btn btn-sm btn-line" onclick="statTest()">전송 시험</button>' : '')
+               + '<button type="button" class="btn btn-sm btn-ghost" onclick="statClear()">기록 지우기</button></div>'
+               + '<div id="stTool" style="margin-top:11px"></div>';
+            box.innerHTML = h;
+        }
+        function statExport() {
+            const s = JSON.stringify(statLoad());
+            document.getElementById('stTool').innerHTML =
+                '<div class="fld-label">아래 값을 복사해 관리자에게 보내 주세요</div>'
+              + '<textarea class="inp" style="font-size:11px;font-family:var(--mono);height:90px" onclick="this.select()">' + s + '</textarea>';
+        }
+        function statMergeUI() {
+            document.getElementById('stTool').innerHTML =
+                '<div class="fld-label">받은 값을 붙여넣고 합치기를 누르세요</div>'
+              + '<textarea id="stMergeIn" class="inp" style="font-size:11px;font-family:var(--mono);height:90px"></textarea>'
+              + '<div style="margin-top:7px"><button type="button" class="btn btn-sm btn-dark" onclick="statMerge()">합치기</button></div>';
+        }
+        function statMerge() {
+            let inc;
+            try { inc = JSON.parse(document.getElementById('stMergeIn').value); }
+            catch (e) { document.getElementById('stTool').insertAdjacentHTML('beforeend',
+                '<div style="margin-top:7px;font-size:12px;color:var(--danger);font-weight:700">값을 읽지 못했습니다. 복사한 그대로 붙여넣어 주세요.</div>'); return; }
+            const d = statLoad();
+            if (!d.cases) d.cases = {}; if (!d.days) d.days = {};
+            Object.keys(inc.cases || {}).forEach(k => {
+                if (!d.cases[k]) d.cases[k] = { n: 0, last: '' };
+                d.cases[k].n += inc.cases[k].n;
+                if (inc.cases[k].last > d.cases[k].last) d.cases[k].last = inc.cases[k].last;
+            });
+            Object.keys(inc.days || {}).forEach(k => { d.days[k] = (d.days[k] || 0) + inc.days[k]; });
+            if (inc.from && (!d.from || inc.from < d.from)) d.from = inc.from;
+            statSave(d);
+            statDraw();
+        }
+        function statPwUI() {
+            document.getElementById('stTool').innerHTML =
+                '<div class="fld-label">새 암호를 넣으면 바꿔 넣을 숫자가 나옵니다</div>'
+              + '<input type="text" id="stPwNew" class="inp" style="max-width:260px" oninput="'
+              + "document.getElementById('stPwOut').innerText = this.value ? ('let STAT_PW = ' + oqHash(this.value) + ';') : ''" + '">'
+              + '<div id="stPwOut" style="margin-top:8px;font-family:var(--mono);font-size:12px;color:var(--ink-2);font-weight:700"></div>'
+              + '<div class="fld-hint">이 줄을 파일에서 찾아 바꾸면 새 암호로 열립니다.</div>';
+        }
+        function statTest() {
+            const t = document.getElementById('stTool');
+            if (!STAT_URL) { t.innerHTML = '<div class="fld-hint">STAT_URL 이 비어 있습니다.</div>'; return; }
+            statSend('random', '0');
+            t.innerHTML = '<div class="fld-hint">시험 신호를 보냈습니다. 스프레드시트에 <b>랜덤 셀렉트 / 1-1</b> 줄이 새로 생겼는지 확인해 주세요.'
+                        + '<br>생기지 않으면 배포 주소나 사내망 접근을 확인하셔야 합니다.</div>';
+        }
+
+        function statClear() {
+            if (!confirm('이 PC 에 쌓인 기록을 모두 지웁니다. 되돌릴 수 없습니다. 계속할까요?')) return;
+            try { localStorage.removeItem(STAT_KEY); } catch (e) {}
+            statDraw();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  소분류 2단계 화면
+        //  ① 카테고리를 누르면 소분류 목록만 보여 준다
+        //  ② 소분류를 누르면 그 안의 CASE 만 보여 준다
+        //  소분류가 없는 카테고리(주관식·자동계산)는 예전처럼 바로 CASE 목록
+        // ═══════════════════════════════════════════════════════════
+        const SUB_DESC = {
+            '쿼터 관련': '집단·보기마다 목표 수가 정해져 있을 때',
+            'MAX 골고루 보기 선택': '앞 문항에서 고른 보기 중 골고루 뽑을 때',
+            '가로테이블': '문항이 세로로, 척도가 가로로 놓인 표',
+            '세로테이블': '보기가 세로로, 항목이 가로로 놓인 표',
+            '페이지 별 로테이션': '앞 페이지들의 제시 순서를 따라갈 때'
+        };
+        let SUBS = {};
+
+        function buildSubGroups() {
+            ['random', 'likert'].forEach(cat => {
+                const root = document.getElementById('category-' + cat);
+                if (!root) return;
+                const list = root.querySelector('.space-y-1\\.5');
+                if (!list) return;
+                const kids = [...list.children];
+                if (!kids.some(e => e.classList.contains('sub-head'))) return;
+                const groups = [];
+                let cur = null;
+                kids.forEach(e => {
+                    if (e.classList.contains('sub-head')) {
+                        cur = { name: e.innerText.trim(), head: e, items: [] };
+                        groups.push(cur);
+                    } else if (cur) cur.items.push(e);
+                });
+                list.innerHTML = '';
+                // 소분류 고르는 화면
+                const picker = document.createElement('div');
+                picker.className = 'sub-pick';
+                picker.id = 'subPick-' + cat;
+                groups.forEach((g, gi) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'sub-card';
+                    b.onclick = () => openSub(cat, gi);
+                    b.innerHTML = '<b>' + g.name + '</b>'
+                        + '<span>' + (SUB_DESC[g.name] || '') + '</span>'
+                        + '<i>' + g.items.length + '가지</i>';
+                    picker.appendChild(b);
+                });
+                list.appendChild(picker);
+                // 각 소분류의 CASE 목록
+                groups.forEach((g, gi) => {
+                    const box = document.createElement('div');
+                    box.className = 'sub-group hidden';
+                    box.id = 'subGrp-' + cat + '-' + gi;
+                    const back = document.createElement('button');
+                    back.type = 'button';
+                    back.className = 'sub-back';
+                    back.onclick = () => backToSub(cat);
+                    back.innerHTML = '← 소분류 다시 고르기';
+                    box.appendChild(back);
+                    g.head.classList.add('sub-head-in');
+                    box.appendChild(g.head);
+                    g.items.forEach(e => box.appendChild(e));
+                    list.appendChild(box);
+                });
+                SUBS[cat] = groups.map((g, gi) => ({
+                    name: g.name,
+                    cases: g.items.map(e => {
+                        const r = e.querySelector('.case-row');
+                        const inp = r ? r.querySelector('input[type=radio]') : null;
+                        return inp ? inp.value : null;
+                    }).filter(v => v)
+                }));
+            });
+        }
+
+        function backToSub(cat) {
+            const pk = document.getElementById('subPick-' + cat);
+            if (pk) pk.classList.remove('hidden');
+            (SUBS[cat] || []).forEach((g, gi) => {
+                const b = document.getElementById('subGrp-' + cat + '-' + gi);
+                if (b) b.classList.add('hidden');
+            });
+        }
+        function openSub(cat, gi) {
+            const pk = document.getElementById('subPick-' + cat);
+            if (pk) pk.classList.add('hidden');
+            (SUBS[cat] || []).forEach((g, k) => {
+                const b = document.getElementById('subGrp-' + cat + '-' + k);
+                if (b) b.classList.toggle('hidden', k !== gi);
+            });
+            // 그 소분류의 첫 CASE 를 고른 상태로 둔다
+            const first = (SUBS[cat][gi] || {}).cases || [];
+            if (first.length) {
+                if (cat === 'random') selectRandomCase(first[0]);
+                else if (cat === 'likert') selectLikertCase(first[0]);
+            }
+        }
+        // 특정 CASE 가 들어 있는 소분류를 펼친다 (도우미에서 이동할 때 사용)
+        function revealSub(cat, no) {
+            if (!SUBS[cat]) return;
+            const gi = SUBS[cat].findIndex(g => g.cases.indexOf(String(no)) >= 0);
+            if (gi < 0) return;
+            const pk = document.getElementById('subPick-' + cat);
+            if (pk) pk.classList.add('hidden');
+            SUBS[cat].forEach((g, k) => {
+                const b = document.getElementById('subGrp-' + cat + '-' + k);
+                if (b) b.classList.toggle('hidden', k !== gi);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  안내 도우미
+        //  CASE 를 늘리거나 고치면 아래 GUIDE_CASES 와 GUIDE_TREE 만
+        //  손보면 됩니다. 다른 코드는 건드릴 필요가 없습니다.
+        // ═══════════════════════════════════════════════════════════
+        const GUIDE_CASES = [
+          { cat:'random', label:'랜덤 셀렉트', no:'0', name:'쿼터가 BY 없이 집단만 있을 때',
+            why:'모든 보기가 후보이고, <b>보기마다 목표 쿼터</b>가 있을 때. 참조 문항 없이 씁니다.',
+            keys:['쿼터','목표','할당','집단','배정','균등','비균등','단일'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'1', name:'쿼터가 BY 일 때',
+            why:'성별·연령·지역 <b>조합(셀)별로 집단이 골고루</b> 찍히면 될 때. 목표 쿼터를 입력하지 않습니다.',
+            keys:['교차','셀','성별','연령','지역','조합','골고루','균등','다차원'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'2', name:'앞 문항 선택 보기 중 MAX 선택',
+            why:'앞 문항에서 <b>고른 보기 중에서</b> 골고루 여러 개를 뽑을 때. 필수 보기가 없습니다.',
+            keys:['랜덤','추출','골고루','기본','뽑기','MAX'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'3', name:'앞 문항 선택 보기 중 MAX 선택 + 필수',
+            why:'앞 문항에서 고른 보기 중 뽑되, <b>반드시 들어가야 할 보기</b>가 있을 때.',
+            keys:['필수','반드시','고정','우선','다중'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'4', name:'필수 보기가 걸리면 MAX 개수 늘리기',
+            why:'필수 보기가 걸리면 <b>뽑는 개수가 달라져야</b> 할 때. 예) 평소 3개, 필수 걸리면 4개.',
+            keys:['가변','개수','MAX','필수','달라'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'5', name:'앞 문항 선택 보기 중 1개 · 쿼터대로',
+            why:'앞 문항(복수응답)에서 고른 보기 중 <b>1개만</b> 뽑되, <b>부족한 보기를 먼저</b> 채울 때.',
+            keys:['쿼터','비율','부족','먼저','단수','1개','복수응답'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'6', name:'여러 페이지에 겹치지 않게 1개씩',
+            why:'수작업 문항이 <b>여러 페이지</b>이고, 앞 페이지에 배정된 보기가 <b>겹치면 안 될</b> 때.',
+            keys:['순차','배타','겹치','중복','여러','다중파일','ELSE'] },
+          { cat:'random', label:'랜덤 셀렉트', no:'7', name:'쿼터가 BY 이고 집단별 목표가 다를 때',
+            why:'셀(성별×연령 등)<b>마다 집단별 목표가 다를</b> 때. 목표가 0인 집단도 지정할 수 있습니다.',
+            keys:['교차','쿼터','셀','집단','0','다름','지정','표'] },
+
+          { cat:'text', label:'주관식', no:'1', name:'슬라이드 바로 변환',
+            why:'수치 입력칸을 <b>좌우로 끄는 막대</b>로 바꿀 때. 온도계·점수 척도에 씁니다.',
+            keys:['슬라이드','바','막대','온도계','드래그','점수','척도'] },
+          { cat:'text', label:'주관식', no:'2', name:'응답 품질 필터',
+            why:'주관식에 <b>단음절·자음·기호 도배</b>를 막거나 <b>최소 글자 수</b>를 강제할 때.',
+            keys:['불량','도배','품질','필터','글자수','최소','ㅁㅁㅁ','기호'] },
+          { cat:'text', label:'주관식', no:'3', name:'드롭다운으로 변환',
+            why:'입력칸을 <b>목록에서 고르게</b> 바꿀 때. 연도·월 같은 숫자 범위, 지역·브랜드 같은 목록 모두.',
+            keys:['드롭다운','선택','목록','연도','월','날짜','지역','브랜드','종속'] },
+          { cat:'text', label:'주관식', no:'4', name:'입력 단위 제한',
+            why:'금액처럼 <b>정해진 배수</b>로만 응답받을 때. 예) 100 단위.',
+            keys:['단위','배수','금액','100','자리수','제한'] },
+
+          { cat:'likert', label:'로테이션', no:'1', name:'가로테이블 리커트척도 대분류 로테이션',
+            why:'문항(행)을 <b>세트로 묶어</b> 세트 간·세트 안 순서를 섞을 때.',
+            keys:['행','세트','대분류','묶','로테이션','문항순서'] },
+          { cat:'likert', label:'로테이션', no:'2', name:'구조파이핑 세로테이블 다중선택형 보기 대분류 로테이션',
+            why:'앞 문항에서 <b>고른 것만 열로</b> 보여주고, 행도 섞을 때. 열을 하나씩 여는 것도 됩니다.',
+            keys:['열','브랜드','감추','보이','제어','StepByStep','하나씩'] },
+          { cat:'likert', label:'로테이션', no:'3', name:'척도 문항에서 척도 열 라벨과 문항 가운데 표의 순서가 맞도록 로테이션',
+            why:'위 <b>제시표</b>와 아래 <b>문항표</b>의 열 순서를 <b>똑같이</b> 섞을 때.',
+            keys:['열','순서','이미지','제시표','연동','같이','무작위'] },
+          { cat:'likert', label:'로테이션', no:'4', name:'앞 페이지 제시 순서에 따라 보기 순서 로테이션',
+            why:'앞에서 <b>로테이션되어 제시된 페이지 순서</b>대로 보기를 배치할 때. 새로 섞지 않습니다.',
+            keys:['앞페이지','제시순서','따라','컨셉','본순서','페이지'] },
+
+          { cat:'calc', label:'자동계산', no:'1', name:'계산식 자동 표시',
+            why:'응답자가 숫자를 넣으면 <b>그 자리에서 계산 결과</b>를 보여줄 때.',
+            keys:['계산','자동','환산','금액','개월','곱하기','수식'] }
+        ];
+
+        const GUIDE_TREE = {
+          start: { q:'무엇을 하려고 하시나요?', opts:[
+            { t:'보기를 자동으로 찍어주기', s:'쿼터 배정 · 랜덤 추출', go:'r1' },
+            { t:'입력칸 모양이나 응답 제한 바꾸기', s:'슬라이드 바 · 드롭다운 · 응답 필터', go:'t1' },
+            { t:'보여주는 순서를 다루기', s:'섞기 · 앞 순서 따라가기 · 열 감추기', go:'l1' },
+            { t:'입력한 값으로 계산해 보여주기', s:'', hit:['calc','1'] } ] },
+
+          r1: { q:'뽑을 후보를 앞 문항 응답으로 제한하나요?', opts:[
+            { t:'아니오 — 모든 보기가 후보', s:'참조 문항 없이 전체에서 배정', go:'r2' },
+            { t:'예 — 앞 문항에서 고른 것만', s:'참조 문항이 있습니다', go:'r3' } ] },
+          r2: { q:'집단마다 목표 쿼터가 정해져 있나요?', opts:[
+            { t:'아니오 — 조합별로 골고루면 됨', s:'성별·연령 조합 안에서 균등', hit:['random','1'] },
+            { t:'예 — 목표 수가 있음', s:'', go:'r4' } ] },
+          r4: { q:'그 목표가 셀(성별·연령 등)마다 다른가요?', opts:[
+            { t:'아니오 — 집단별로 목표 하나씩', s:'예) 집단1 100명, 집단2 150명', hit:['random','0'] },
+            { t:'예 — 셀마다 집단 목표가 다름', s:'예) 남 20대는 집단1이 4명, 남 30대는 5명', hit:['random','7'] } ] },
+          r3: { q:'수작업 문항이 몇 개인가요?', opts:[
+            { t:'여러 페이지 — 서로 겹치면 안 됨', s:'앞 페이지에 배정된 보기는 제외', hit:['random','6'] },
+            { t:'한 문항', s:'', go:'r5' } ] },
+          r5: { q:'몇 개를 뽑나요?', opts:[
+            { t:'1개만 — 부족한 보기를 먼저 채우고 싶음', s:'보기별 목표 쿼터를 입력합니다', hit:['random','5'] },
+            { t:'여러 개 (MAX)', s:'', go:'r6' } ] },
+          r6: { q:'반드시 들어가야 할 필수 보기가 있나요?', opts:[
+            { t:'없음', s:'고른 보기 중 골고루', hit:['random','2'] },
+            { t:'있음', s:'', go:'r7' } ] },
+          r7: { q:'필수 보기가 걸리면 뽑는 개수가 달라지나요?', opts:[
+            { t:'아니오 — 개수는 항상 같음', s:'', hit:['random','3'] },
+            { t:'예 — 개수가 달라짐', s:'예) 평소 3개, 필수 걸리면 4개', hit:['random','4'] } ] },
+
+          t1: { q:'입력칸을 어떻게 하시나요?', opts:[
+            { t:'좌우로 끄는 막대로 바꾸기', s:'온도계·점수 척도', hit:['text','1'] },
+            { t:'목록이나 범위에서 고르게 바꾸기', s:'연도·월, 지역·브랜드 목록', hit:['text','3'] },
+            { t:'이상한 응답을 막기', s:'도배·짧은 응답 차단', hit:['text','2'] },
+            { t:'정해진 배수로만 받기', s:'예) 100 단위', hit:['text','4'] } ] },
+
+          l1: { q:'순서를 어떻게 다루시나요?', opts:[
+            { t:'행(문항) 순서를 섞기', s:'세트로 묶어 섞습니다', hit:['likert','1'] },
+            { t:'열 순서를 섞기 — 위 제시표와 함께', s:'이미지 표와 문항표를 같은 순서로', hit:['likert','3'] },
+            { t:'앞 문항에서 고른 열만 보여주기', s:'행 섞기도 함께 됩니다', hit:['likert','2'] },
+            { t:'섞지 않고 — 앞 페이지에서 본 순서 그대로', s:'', hit:['likert','4'] } ] }
+        };
+
+        const GUIDE_CMP = [
+          ['쿼터 1-2 vs 1-3', '집단별 목표가 <b>같으면 1</b>, 보기마다 <b>다르면 5</b>'],
+          ['쿼터 1-2 vs 1-4', '셀마다 집단 목표가 <b>같으면 1</b>, <b>다르면 7</b>'],
+          ['쿼터 1-1 vs 1-3', '참조 문항 <b>없이 전체</b>가 후보면 0, <b>고른 것만</b> 후보면 5'],
+          ['쿼터 1-3 vs MAX 2-1~3', '수작업 문항에서 <b>1개만</b> 뽑으면 5, <b>여러 개</b>면 2~4'],
+          ['MAX 2-1 vs 2-2', '필수 보기가 <b>없으면 2</b>, <b>있으면 3</b> <span style="color:var(--ink-4)">(만들어지는 코드는 같습니다)</span>'],
+          ['MAX 2-2 vs 2-3', '필수가 걸려도 개수가 <b>같으면 3</b>, <b>달라지면 4</b>'],
+          ['가로 1-1 vs 1-2', '섞는 게 <b>행이면 1</b>, <b>열이면 3</b>'],
+          ['가로 1-2 vs 페이지 3-1', '이 페이지에서 <b>새로 섞으면 3</b>, 앞에서 본 <b>순서를 따라가면 4</b>'],
+          ['주관식 3-1 vs 3-2', '고를 것이 <b>숫자 범위면 수치형</b>, <b>정해진 목록이면 문자열</b>']
+        ];
+
+        let gdStack = [];
+        function openGuide() { document.getElementById('guideModal').classList.remove('hidden'); gdReset(); }
+        function closeGuide() { document.getElementById('guideModal').classList.add('hidden'); }
+        function gdMode(m) {
+            ['ask','find','cmp'].forEach(k => {
+                document.getElementById('gd' + k[0].toUpperCase() + k.slice(1)).classList.toggle('hidden', k !== m);
+                const tb = document.getElementById('gdTab' + (k === 'ask' ? 'Ask' : k === 'find' ? 'Find' : 'Cmp'));
+                if (tb) tb.classList.toggle('gd-tab-on', k === m);
+            });
+            if (m === 'cmp') gdDrawCmp();
+            if (m === 'find') document.getElementById('gdQ').focus();
+        }
+        function gdReset() { gdStack = ['start']; gdDrawAsk(); gdMode('ask');
+            document.getElementById('gdQ').value = ''; document.getElementById('gdResult').innerHTML = ''; }
+
+        function gdCard(cat, no) {
+            const c = GUIDE_CASES.find(x => x.cat === cat && x.no === no);
+            if (!c) return '';
+            return '<div class="gd-hit"><div class="gd-cat">' + c.label + '</div>'
+                 + '<div class="gd-nm">CASE ' + caseNo(c.cat, c.no) + ' &nbsp;' + c.name + '</div>'
+                 + '<div class="gd-why">' + c.why + '</div>'
+                 + '<div class="gd-act">'
+                 + '<button type="button" class="btn btn-sm btn-dark" onclick="gdGo(\'' + c.cat + '\',\'' + c.no + '\')">이 CASE 로 이동</button>'
+                 + '<button type="button" class="btn btn-sm btn-line" onclick="gdManual(\'' + c.cat + '\',\'' + c.no + '\')">메뉴얼 보기</button>'
+                 + '</div></div>';
+        }
+        function gdGo(cat, no) {
+            closeGuide();
+            switchCategory(cat);
+            revealSub(cat, no);
+            if (cat === 'random') selectRandomCase(no);
+            else if (cat === 'text') selectTextCase(no);
+            else if (cat === 'likert') selectLikertCase(no);
+            showBuildStatus('<b>' + (GUIDE_CASES.find(x => x.cat===cat && x.no===no)||{}).name + '</b> 으로 이동했습니다.', 'ok', true);
+        }
+        function gdManual(cat, no) { closeGuide(); switchCategory(cat); revealSub(cat, no); openManual(no); }
+
+        function gdDrawAsk() {
+            const node = GUIDE_TREE[gdStack[gdStack.length - 1]];
+            let h = '';
+            if (gdStack.length > 1) h += '<button type="button" class="gd-back" onclick="gdStack.pop(); gdDrawAsk();">← 이전 질문</button>';
+            h += '<div class="gd-q">' + node.q + '</div>';
+            node.opts.forEach((o, i) => {
+                h += '<button type="button" class="gd-opt" onclick="gdPick(' + i + ')"><b>' + o.t + '</b>'
+                   + (o.s ? '<span>' + o.s + '</span>' : '') + '</button>';
+            });
+            document.getElementById('gdAsk').innerHTML = h;
+        }
+        function gdPick(i) {
+            const node = GUIDE_TREE[gdStack[gdStack.length - 1]];
+            const o = node.opts[i];
+            if (o.go) { gdStack.push(o.go); gdDrawAsk(); return; }
+            document.getElementById('gdAsk').innerHTML =
+                '<button type="button" class="gd-back" onclick="gdStack.pop(); gdDrawAsk();">← 이전 질문</button>'
+                + '<div class="gd-q">이걸 쓰시면 됩니다</div>' + gdCard(o.hit[0], o.hit[1]);
+        }
+
+        function gdSearch() {
+            const q = document.getElementById('gdQ').value.trim();
+            const box = document.getElementById('gdResult');
+            if (!q) { box.innerHTML = ''; return; }
+            const words = q.replace(/[^0-9A-Za-z가-힣ㄱ-ㅎ]/g, ' ').split(/\s+/).filter(w => w.length >= 1);
+            const scored = GUIDE_CASES.map(c => {
+                let sc = 0;
+                const hay = (c.name + ' ' + c.why.replace(/<[^>]+>/g, '') + ' ' + c.keys.join(' ') + ' ' + c.label);
+                words.forEach(w => {
+                    c.keys.forEach(k => { if (k.indexOf(w) >= 0 || w.indexOf(k) >= 0) sc += 3; });
+                    if (hay.indexOf(w) >= 0) sc += 1;
+                });
+                return { c: c, sc: sc };
+            }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 4);
+            if (!scored.length) {
+                box.innerHTML = '<div class="gd-none">맞는 CASE 를 찾지 못했습니다.<br>'
+                    + '<b>질문 따라가기</b> 로 골라 보시거나, 담당자에게 문의해 주세요.</div>';
+                return;
+            }
+            box.innerHTML = scored.map(x => gdCard(x.c.cat, x.c.no)).join('');
+        }
+
+        function gdDrawCmp() {
+            let h = '<div class="gd-q">비슷해 보이는 것들, 이렇게 가릅니다</div>';
+            h += '<table class="gd-tbl"><thead><tr><th style="width:150px">헷갈리는 지점</th><th>가르는 기준</th></tr></thead><tbody>';
+            GUIDE_CMP.forEach(r => { h += '<tr><td><b>' + r[0] + '</b></td><td>' + r[1] + '</td></tr>'; });
+            h += '</tbody></table>';
+            document.getElementById('gdCmp').innerHTML = h;
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && !document.getElementById('guideModal').classList.contains('hidden')) closeGuide();
+            if (e.key === 'Escape' && !document.getElementById('statModal').classList.contains('hidden')) closeStat();
+        });
+
+
+        // ══════ CASE 5 : 대분류 추가 + 참조 선택 보기만 제시 ══════
+        let LK5 = null;
+        function switchLk5Ref(v) {
+            const r = document.querySelector('input[name="lk5RefKind"][value="' + v + '"]');
+            if (r) r.checked = true;
+            ['sa','ma'].forEach(k => { const e = document.getElementById('btn-lk5ref-' + k);
+                if (e) e.classList.toggle('preset-active', k === v); });
+            document.getElementById('lk5ValBox').classList.toggle('hidden', v !== 'sa');
+            document.getElementById('lk5RefLabel').innerText = (v === 'sa') ? '참조 문항 목록' : '참조 문항 (복수응답)';
+            document.getElementById('lk5Ref').placeholder = (v === 'sa')
+                ? '예: Q133SA, Q134SA, Q135SA ...' : '예: Q72MA';
+            document.getElementById('lk5RefHint').innerHTML = (v === 'sa')
+                ? '보기마다 문항이 따로 있고, 특정 보기를 고른 것만 남깁니다.'
+                : '한 문항의 응답 비트열을 읽어 <b>고른 보기만</b> 남깁니다.';
+            lk5Detect();
+        }
+        function lk5RefKind() { const e = document.querySelector('input[name="lk5RefKind"]:checked'); return e ? e.value : 'sa'; }
+        function switchLk5Rot(v) {
+            const r = document.querySelector('input[name="lk5Rot"][value="' + v + '"]');
+            if (r) r.checked = true;
+            ['none','group','item','both'].forEach(k => { const e = document.getElementById('btn-lk5rot-' + k);
+                if (e) e.classList.toggle('preset-active', k === v); });
+        }
+        function lk5Rot() { const e = document.querySelector('input[name="lk5Rot"]:checked'); return e ? e.value : 'none'; }
+        function lk5Refs() {
+            return (document.getElementById('lk5Ref').value || '').split(',').map(s => s.trim()).filter(s => s);
+        }
+
+        function lk5Parse(html) {
+            const d = document.createElement('div');
+            d.innerHTML = html;
+            const t = [...d.querySelectorAll('table')].filter(x => x.querySelectorAll('input[type=radio],input[type=checkbox]').length).pop();
+            if (!t) return null;
+            const trs = [...t.querySelectorAll('tr')];
+            if (trs.length < 2) return null;
+            const head = trs[0];
+            const rows = trs.slice(1).filter(tr => tr.querySelectorAll('input').length);
+            if (!rows.length) return null;
+            const names = rows.map(tr => { const e = tr.querySelector('input'); return e ? e.name : ''; });
+            return { div: d, table: t, headTr: head, rows: rows, names: names,
+                     cols: [...head.children].length,
+                     scale: [...rows[0].children].length - 1,
+                     labels: rows.map(tr => tr.children[0].innerText.replace(/\s+/g,' ').trim().slice(0, 28)) };
+        }
+
+        function lk5Detect() {
+            const box = document.getElementById('lk5Detect');
+            const html = document.getElementById('inputHtml').value;
+            LK5 = null;
+            if (!box) return;
+            if (!html.trim()) { box.innerHTML = '원본을 넣으면 표 구조를 자동으로 읽습니다.'; lk5Sync(); return; }
+            const p = lk5Parse(html);
+            if (!p) { box.innerHTML = '<b style="color:var(--danger)">라디오·체크박스가 있는 표를 찾지 못했습니다.</b>'; lk5Sync(); return; }
+            LK5 = p;
+            const refs = lk5Refs(), kind = lk5RefKind();
+            let h = '문항표 : 보기 <b>' + p.rows.length + '개</b> · 척도 <b>' + p.scale + '단계</b><br>';
+            h += '문항 ID : <b>' + p.names[0] + ' ~ ' + p.names[p.names.length - 1] + '</b><br>';
+            h += '보기 : ' + p.labels.slice(0, 4).join(' · ') + (p.labels.length > 4 ? ' …' : '');
+            if (kind === 'sa' && refs.length && refs.length !== p.rows.length)
+                h += '<br><b style="color:var(--danger)">참조 문항 ' + refs.length + '개와 보기 ' + p.rows.length + '개가 다릅니다.</b>';
+            else if (kind === 'sa' && refs.length)
+                h += '<br><span style="color:var(--ok)"><b>' + refs.map((r,i)=>'보기'+(i+1)+'←'+r).slice(0,3).join(' · ') + (refs.length>3?' …':'') + '</b></span>';
+            box.innerHTML = h;
+            lk5Sync();
+        }
+
+        function addLk5Group(name, span) {
+            const c = document.getElementById('lk5Groups');
+            const d = document.createElement('div');
+            d.className = 'flex gap-2 items-center lk5-grp';
+            d.innerHTML = '<input type="text" class="inp lk5-name" style="flex:1" placeholder="대분류 이름 (예: 취업지원)" value="' + (name || '') + '">'
+                + '<input type="number" min="1" class="inp lk5-span" style="width:90px" placeholder="행 수" value="' + (span || '') + '" oninput="lk5UpdateSum()">'
+                + '<button type="button" onclick="this.parentElement.remove(); lk5UpdateSum();" class="btn btn-sm btn-ghost">삭제</button>';
+            c.appendChild(d);
+            lk5UpdateSum();
+        }
+        function lk5Sync() {
+            const c = document.getElementById('lk5Groups');
+            if (c && !c.children.length && LK5) addLk5Group('그룹1', LK5.rows.length);
+            lk5UpdateSum();
+        }
+        function lk5Groups() {
+            return [...document.querySelectorAll('#lk5Groups .lk5-grp')].map(r => ({
+                name: r.querySelector('.lk5-name').value.trim(),
+                span: parseInt(r.querySelector('.lk5-span').value) || 0 })).filter(g => g.span > 0);
+        }
+        function lk5UpdateSum() {
+            const g = lk5Groups(), tot = g.reduce((a, x) => a + x.span, 0);
+            const s = document.getElementById('lk5Sum'); if (s) s.innerText = tot;
+            const hint = document.getElementById('lk5Hint');
+            if (!hint) return;
+            hint.className = 'text-xs font-bold';
+            if (!LK5) { hint.className = 'text-xs muted'; hint.style.color = ''; hint.innerText = '원본을 넣어 주세요'; return; }
+            if (tot === LK5.rows.length) { hint.style.color = 'var(--ok)'; hint.innerText = '보기 수와 일치 (' + tot + ')'; }
+            else { hint.style.color = 'var(--danger)'; hint.innerText = '보기 ' + LK5.rows.length + '개와 다릅니다'; }
+        }
+
+
+        function generateLikertCase5() {
+            const html = document.getElementById('inputHtml').value;
+            if (!html.trim()) { showBuildStatus('원본 HTM 코드가 비어 있습니다.', 'error'); return false; }
+            lk5Detect();
+            if (!LK5) { showBuildStatus('라디오·체크박스가 있는 표를 찾지 못했습니다.', 'error'); return false; }
+
+            const kind = lk5RefKind(), refs = lk5Refs();
+            const selVal = document.getElementById('lk5Val').value.trim() || '2';
+            const wid = parseFloat(document.getElementById('lk5Width').value) || 10;
+            const rot = lk5Rot(), grps = lk5Groups();
+            const N = LK5.rows.length;
+            const tot = grps.reduce((a, g) => a + g.span, 0);
+
+            if (!refs.length) vErr('<b>참조 문항</b>을 입력해 주세요.');
+            else if (kind === 'sa' && refs.length !== N)
+                vErr('참조 문항 <b>' + refs.length + '개</b>와 보기 <b>' + N + '개</b>가 다릅니다. 보기마다 문항이 하나씩 있어야 합니다.');
+            else if (kind === 'ma' && refs.length !== 1)
+                vErr('복수응답 방식은 참조 문항을 <b>하나만</b> 적습니다.');
+            if (!grps.length) vErr('<b>대분류</b>를 최소 1개 설정해 주세요.');
+            else if (tot !== N) vErr('대분류 행 수의 합(<b>' + tot + '</b>)이 보기 수(<b>' + N + '</b>)와 다릅니다.');
+            if (grps.some(g => !g.name)) vErr('이름이 비어 있는 대분류가 있습니다.');
+            if (wid >= 45) vWarn('대분류 열 너비가 <b>' + wid + '%</b>입니다. 문항 칸이 좁아질 수 있습니다.');
+            if (LK5.names.some(n => !n)) vErr('문항 ID를 읽지 못한 행이 있습니다.');
+            if (vStop()) return false;
+
+            const NL = '\r\n';
+            const esc = s => String(s).replace(/\r/g,'').replace(/[\n\t]+/g,' ')
+                                      .replace(/ {2,}/g,' ').trim().replace(/"/g,'""');
+            const ranges = []; let at = 1;
+            grps.forEach(g => { ranges.push([at, at + g.span - 1]); at += g.span; });
+
+            let a = '<!-- #include virtual="/include/i_db.asp"-->' + NL + '<%' + NL;
+            a += "' [로테이션 CASE 5] 대분류를 붙이고, 참조 문항에서 고른 보기만 남긴다." + NL;
+            a += "'  한 보기도 고르지 않은 대분류는 행 자체를 만들지 않는다." + NL;
+            a += "'  대분류 칸 높이(rowspan)는 남은 보기 수에 맞춰 자동으로 정해진다." + NL + NL;
+            a += 'TxtMode = request("TxtMode")' + NL + 'TxtSurveyID = request("TxtSurveyID")' + NL + NL;
+            a += 'if TxtMode <> "" then' + NL + '\ttblName = "tmRespondanswer"' + NL + '\ttblValue = "tmRespondent"' + NL
+               + 'else' + NL + '\ttblName = "emRespondanswer"' + NL
+               + '\ttblValue = "[EMCS-DB].SURVEYINFO.dbo.emRespondent"' + NL + 'end if' + NL + NL;
+
+            if (rot !== 'none') a += LK5LIB + NL;
+
+            a += "' 참조 문항 응답 확인" + NL;
+            a += 'sql_f = "SELECT ANSNO, AnsValue FROM " & tblName & " WHERE SurveyID = \'" & TxtSurveyID & "\' AND " & _' + NL;
+            a += '\t\t" panelid = \'" & request("TxtPanelID") & "\' and ANSNO in (' + refs.map(r => "'" + r + "'").join(',') + ') ORDER BY ANSNO "' + NL + NL;
+            a += 'Set rs_f = Server.CreateObject("ADODB.Recordset")' + NL + 'rs_f.open sql_f, i_db,1,3' + NL + NL;
+            a += 'Dim preVal(' + N + ')' + NL;
+            if (kind === 'sa') {
+                a += 'Do While Not rs_f.EOF' + NL;
+                refs.forEach((r, k) => {
+                    a += '\tIf rs_f("ANSNO") = "' + r + '" then' + NL;
+                    a += '\t\tpreVal(' + (k + 1) + ') = rs_f("AnsValue")' + NL;
+                    a += '\tEnd If' + NL;
+                });
+                a += 'rs_f.movenext()' + NL + 'Loop' + NL + 'Set rs_f = Nothing' + NL + NL;
+            } else {
+                a += 'refVal = ""' + NL;
+                a += 'If Not(rs_f.Eof Or rs_f.Bof) Then refVal = rs_f("AnsValue") & ""' + NL;
+                a += 'Set rs_f = Nothing' + NL + NL;
+                a += 'For i = 1 To ' + N + NL;
+                a += '\tIf Len(refVal) >= i Then preVal(i) = Mid(refVal, i, 1)' + NL;
+                a += 'Next' + NL + NL;
+            }
+
+            a += "' 대분류별로 남길 보기를 모은다" + NL;
+            a += 'Dim chk_List(' + grps.length + ')' + NL;
+            ranges.forEach((r, gi) => {
+                a += 'For i = ' + r[0] + ' To ' + r[1] + NL;
+                a += '\tIf Trim(preVal(i) & "") = "' + (kind === 'sa' ? selVal : '1') + '" Then' + NL;
+                a += '\t\tchk_List(' + (gi + 1) + ') = chk_List(' + (gi + 1) + ') & "@" & i' + NL;
+                a += '\tEnd If' + NL + 'Next' + NL + NL;
+            });
+
+            if (rot === 'group' || rot === 'both') {
+                a += "' 대분류 순서 섞기 (내용이 있는 대분류만)" + NL;
+                a += 'gOrder = ""' + NL;
+                a += 'For i = 1 To ' + grps.length + NL;
+                a += '\tIf chk_List(i) <> "" Then gOrder = gOrder & "@" & i' + NL + 'Next' + NL;
+                a += 'gArr = LK5Shuffle(gOrder)' + NL + NL;
+            } else {
+                a += 'gOrder = ""' + NL;
+                a += 'For i = 1 To ' + grps.length + NL;
+                a += '\tIf chk_List(i) <> "" Then gOrder = gOrder & "@" & i' + NL + 'Next' + NL;
+                a += 'gArr = Split(gOrder, "@")' + NL + NL;
+            }
+            if (rot === 'item' || rot === 'both') {
+                a += "' 대분류 안 보기 순서 섞기" + NL;
+                a += 'For i = 1 To ' + grps.length + NL;
+                a += '\tIf chk_List(i) <> "" Then chk_List(i) = LK5ShuffleStr(chk_List(i))' + NL + 'Next' + NL + NL;
+            }
+
+            a += 'Dim B_Title(' + grps.length + ')' + NL;
+            grps.forEach((g, k) => { a += 'B_Title(' + (k + 1) + ')="' + esc(g.name) + '"' + NL; });
+            a += NL + 'Dim Title(' + N + ')' + NL;
+            LK5.rows.forEach((tr, k) => { a += 'Title(' + (k + 1) + ')="' + esc(tr.children[0].innerHTML) + '"' + NL; });
+            a += '%>' + NL;
+
+            // ── 표 다시 그리기 ──
+            const headTds = [...LK5.headTr.children];
+            let h0 = headTds[0].cloneNode(true);
+            h0.setAttribute('colspan', '2');
+            const headHtml = '<tr>' + NL + h0.outerHTML + NL
+                           + headTds.slice(1).map(e => e.outerHTML).join(NL) + NL + '</tr>' + NL;
+
+            const first = LK5.rows[0];
+            const labTd = first.children[0].cloneNode(true);
+            const labStyle = (labTd.getAttribute('style') || '').replace(/width:\s*[\d.]+%/i, 'width: ' + (parseFloat((first.children[0].getAttribute('style')||'').match(/width:\s*([\d.]+)%/i)?.[1] || 50) - wid).toFixed(1) + '%');
+            const grpStyle = (labTd.getAttribute('style') || '').replace(/width:\s*[\d.]+%/i, 'width: ' + wid + '%');
+
+            let body = headHtml;
+            body += '<% For gi = 1 To UBound(gArr) %>' + NL;
+            body += '<% gNo = CInt(gArr(gi)) %>' + NL;
+            body += '<% rIdx = Split(chk_List(gNo), "@") %>' + NL;
+            body += '<% For k = 1 To UBound(rIdx) %>' + NL;
+            body += '<% rNo = CInt(rIdx(k)) %>' + NL;
+            body += '          <tr>' + NL;
+            body += '<% If k = 1 Then %>' + NL;
+            body += '            <td style="' + grpStyle + '" rowspan="<%=UBound(rIdx)%>">' + NL;
+            body += '              <p style="text-align: center"><span><b><%=B_Title(gNo)%></b></span></p>' + NL;
+            body += '            </td>' + NL;
+            body += '<% End If %>' + NL;
+            body += '            <td style="' + labStyle + '">' + NL;
+            body += '              <p style="text-align: center"><span><%=Title(rNo)%></span></p>' + NL;
+            body += '            </td>' + NL;
+            [...first.children].slice(1).forEach((td, ci) => {
+                let cell = td.outerHTML;
+                const nm = LK5.names[0];
+                cell = cell.replace(new RegExp(nm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '@@QID@@');
+                body += cell.replace(/@@QID@@/g, '<%=LK5Q(rNo)%>') + NL;
+            });
+            body += '          </tr>' + NL;
+            body += '<% Next %>' + NL + '<% Next %>' + NL;
+
+            // 문항 ID 함수 (원본 name 을 그대로 쓴다)
+            let idfn = NL + '<%' + NL;
+            idfn += "' 보기 번호 → 원본에 있던 문항 ID (계산하지 않고 그대로 쓴다)" + NL;
+            idfn += 'Function LK5Q(n)' + NL + '\tSelect Case n' + NL;
+            LK5.names.forEach((nm, k) => { idfn += '\t\tCase ' + (k + 1) + NL + '\t\t\tLK5Q = "' + nm + '"' + NL; });
+            idfn += '\t\tCase Else' + NL + '\t\t\tLK5Q = ""' + NL + '\tEnd Select' + NL + 'End Function' + NL + '%>' + NL;
+            a = a.replace(/%>\r\n$/, '%>' + NL) ;
+            a = a.slice(0, a.lastIndexOf('%>')) + idfn.replace(/^\r\n<%\r\n/, '') + '%>' + NL;
+
+            const tb = LK5.table.querySelector('tbody') || LK5.table;
+            tb.innerHTML = '@@LK5BODY@@';
+            const out = a + LK5.div.innerHTML.replace('@@LK5BODY@@', body);
+            document.getElementById('outputHtml').value = out;
+            const rotTxt = { none:'고정', group:'대분류 간만', item:'대분류 안만', both:'모두' }[rot];
+            showBuildStatus('빌드 완료 &nbsp;·&nbsp; 대분류 + 참조 선택 보기만 &nbsp;·&nbsp; 보기 <b>' + N + '개</b>'
+                + ' &nbsp;·&nbsp; 대분류 <b>' + grps.length + '개</b> &nbsp;·&nbsp; 참조 <b>'
+                + (kind === 'sa' ? refs.length + '개 문항 · 값 ' + selVal : refs[0] + ' (복수응답)') + '</b>'
+                + ' &nbsp;·&nbsp; 로테이션 <b>' + rotTxt + '</b>', 'ok');
+            return true;
+        }
+
+        const LK5LIB = [
+            "' 순서 섞기 (사내 방식과 동일하게 중복 없는 무작위)",
+            'Function LK5Shuffle(src)',
+            '\tDim sp, n, i, j, t, arr',
+            '\tsp = Split(src, "@")',
+            '\tn = UBound(sp)',
+            '\tReDim arr(n)',
+            '\tFor i = 0 To n',
+            '\t\tarr(i) = sp(i)',
+            '\tNext',
+            '\tRandomize',
+            '\tFor i = n To 2 Step -1',
+            '\t\tj = Int(Rnd * i) + 1',
+            '\t\tt = arr(i) : arr(i) = arr(j) : arr(j) = t',
+            '\tNext',
+            '\tLK5Shuffle = arr',
+            'End Function',
+            '',
+            'Function LK5ShuffleStr(src)',
+            '\tDim a2, i, s',
+            '\ta2 = LK5Shuffle(src)',
+            '\ts = ""',
+            '\tFor i = 1 To UBound(a2)',
+            '\t\ts = s & "@" & a2(i)',
+            '\tNext',
+            '\tLK5ShuffleStr = s',
+            'End Function'
+        ].join('\r\n');
+
+        // ══════ CASE 4 : 앞 페이지 제시 순서 따라가기 ══════
+        let LK4 = null;
+        function lk4Pages() {
+            return (document.getElementById('lk4Pages').value || '')
+                   .split(',').map(s => s.trim()).filter(s => /^\d+$/.test(s));
+        }
+        function lk4Parse(html) {
+            const d = document.createElement('div');
+            d.innerHTML = html;
+            const t = [...d.querySelectorAll('table')].filter(x => x.querySelectorAll('input[type=radio],input[type=checkbox]').length).pop();
+            if (!t) return null;
+            const trs = [...t.querySelectorAll('tr')];
+            const cells = [];
+            trs.forEach(tr => [...tr.children].forEach(td => {
+                if (td.querySelector('input[type=radio],input[type=checkbox]')) cells.push(td);
+            }));
+            if (!cells.length) return null;
+            const items = cells.map(td => {
+                const inp = td.querySelector('input[type=radio],input[type=checkbox]');
+                const img = td.querySelector('img');
+                return { name: inp.name, value: inp.value,
+                         text: td.innerText.replace(/\s+/g,' ').trim().slice(0, 24),
+                         img: img ? (img.getAttribute('src')||'').split('/').pop() : '' };
+            });
+            const rows = trs.length, cols = trs.length ? [...trs[0].children].length : 0;
+            return { div: d, table: t, cells: cells, items: items, rows: rows, cols: cols };
+        }
+        function lk4Detect() {
+            const box = document.getElementById('lk4Detect');
+            const html = document.getElementById('inputHtml').value;
+            LK4 = null;
+            if (!box) return;
+            if (!html.trim()) { box.innerHTML = '원본을 넣으면 표 구조를 자동으로 읽습니다.'; return; }
+            const p = lk4Parse(html);
+            if (!p) { box.innerHTML = '<b style="color:var(--danger)">라디오·체크박스가 있는 표를 찾지 못했습니다.</b>'; return; }
+            LK4 = p;
+            const pg = lk4Pages();
+            let h = '표 : <b>' + p.rows + '행 × ' + p.cols + '열</b> · 보기 <b>' + p.items.length + '개</b><br>';
+            h += '문항 ID : <b>' + [...new Set(p.items.map(i => i.name))].join(', ') + '</b><br>';
+            h += '보기 : ' + p.items.map(i => i.value + '. ' + (i.text || '(글자 없음)') + (i.img ? ' +' + i.img : '')).join(' &nbsp;·&nbsp; ');
+            if (pg.length && pg.length !== p.items.length)
+                h += '<br><b style="color:var(--danger)">페이지 번호 ' + pg.length + '개와 보기 ' + p.items.length + '개가 다릅니다.</b>';
+            else if (pg.length)
+                h += '<br><span style="color:var(--ok)"><b>' + pg.map((v,i)=>'보기'+(i+1)+'←P'+v).join(' · ') + '</b></span>';
+            box.innerHTML = h;
+        }
+
+        function generateLikertCase4() {
+            const html = document.getElementById('inputHtml').value;
+            if (!html.trim()) { showBuildStatus('원본 HTM 코드가 비어 있습니다.', 'error'); return false; }
+            lk4Detect();
+            if (!LK4) { showBuildStatus('라디오·체크박스가 있는 표를 찾지 못했습니다.', 'error'); return false; }
+            const pg = lk4Pages(), N = LK4.items.length;
+            if (!pg.length) vErr('<b>앞 페이지 번호</b>를 입력해 주세요. 예) 71, 73, 75, 77');
+            else if (pg.length !== N) vErr('페이지 번호 <b>' + pg.length + '개</b>와 보기 <b>' + N + '개</b>가 다릅니다.');
+            if (new Set(pg).size !== pg.length) vErr('페이지 번호가 중복됩니다.');
+            if (N < 2) vErr('보기가 <b>' + N + '개</b>입니다. 2개 이상이어야 합니다.');
+            if (vStop()) return false;
+
+            const key = 'PR' + (LK4.table.id || 'T').replace(/[^A-Za-z0-9]/g, '');
+            const NL = '\r\n';
+            const esc = s => String(s).replace(/\r/g,'').replace(/[\n\t]+/g,' ')
+                                      .replace(/ {2,}/g,' ').trim().replace(/"/g,'""');
+            const orig = LK4.cells.map(td => td.innerHTML);
+            LK4.cells.forEach((td, p) => { td.innerHTML = '@@PR@' + key + '_' + (p + 1) + '@PR@@'; });
+
+            let a = '<!-- #include virtual="/include/i_db.asp"-->' + NL + '<%' + NL;
+            a += "' [로테이션 CASE 4] 앞 페이지의 제시 순서를 그대로 따라 보기를 배치한다." + NL;
+            a += "'  순서는 사내 페이지 로테이션 기록(emPageRotationInfo)에서 읽는다." + NL;
+            a += "'  문항 ID 와 value 는 보기에 고정되므로 순서가 바뀌어도 같은 보기는 같은 값으로 쌓인다." + NL + NL;
+            a += 'TxtSurveyID = request("TxtSurveyID")' + NL + 'TxtPanelID = request("TxtPanelID")' + NL;
+            a += 'TxtMode = request("TxtMode")' + NL + NL;
+            a += 'if TxtMode <> "" then' + NL + '\ttblName = "tmPageRotationInfo"' + NL + 'else' + NL
+               + '\ttblName = "emPageRotationInfo"' + NL + 'end if' + NL + NL;
+            a += 'sql_f = "SELECT edPageNo, NewPageNo FROM " & tblName & _' + NL;
+            a += '\t\t" WHERE SurveyID = \'" & TxtSurveyID & "\' AND Panelid = \'" & TxtPanelID & "\' " & _' + NL;
+            a += '\t\t" AND ( ' + pg.map(v => 'edPageNo = ' + v).join(' or ') + ' ) order by edPageNo "' + NL + NL;
+            a += 'Set rs_f = Server.CreateObject("ADODB.Recordset")' + NL + 'rs_f.open sql_f, i_db,1,3' + NL + NL;
+            a += key + 'Info = ""' + NL + key + 'Order = ""' + NL;
+            a += 'If Not rs_f.eof Then' + NL + '\tDo While Not rs_f.eof' + NL;
+            a += '\t\t' + key + 'Info = ' + key + 'Info & "@" & rs_f(1)' + NL;
+            pg.forEach((v, i) => {
+                a += '\t\t' + (i === 0 ? 'If' : 'ElseIf') + ' rs_f(1) = ' + v + ' Then' + NL;
+                a += '\t\t\t' + key + 'Order = ' + key + 'Order & "@' + (i + 1) + '"' + NL;
+            });
+            a += '\t\tEnd If' + NL + '\trs_f.movenext' + NL + '\tLoop' + NL + 'End If' + NL;
+            a += 'Set rs_f = Nothing' + NL + NL;
+            a += "' 순서를 못 읽으면 화면을 만들지 않는다 (엉뚱한 순서로 나가거나 보기가 빠지는 것을 막는다)" + NL;
+            a += 'If ' + key + 'Order = "" Then' + NL;
+            a += '\tResponse.write "관리자에게 문의 바랍니다"' + NL + '\tResponse.End' + NL + 'End If' + NL + NL;
+            a += key + 'S = Split(' + key + 'Order, "@")' + NL + NL;
+            a += "' 읽어온 개수가 보기 수와 다르면 (기록이 일부만 남은 경우) 역시 멈춘다" + NL;
+            a += 'If UBound(' + key + 'S) <> ' + N + ' Then' + NL;
+            a += '\tResponse.write "관리자에게 문의 바랍니다"' + NL + '\tResponse.End' + NL + 'End If' + NL + NL;
+
+            for (let p = 0; p < N; p++) {
+                a += "' " + (p + 1) + '번째 자리' + NL;
+                a += 'Select Case CInt(' + key + 'S(' + (p + 1) + '))' + NL;
+                for (let c = 0; c < N; c++) {
+                    a += '\tCase ' + (c + 1) + NL;
+                    a += '\t\t' + key + '_' + (p + 1) + ' = "' + esc(orig[c]) + '"' + NL;
+                }
+                a += '\tCase Else' + NL + '\t\t' + key + '_' + (p + 1) + ' = ""' + NL;
+                a += 'End Select' + NL + NL;
+            }
+            a += '%>' + NL;
+
+            const out = a + LK4.div.innerHTML.replace(/@@PR@([A-Za-z0-9_]+)@PR@@/g, '<%=$1%>');
+            document.getElementById('outputHtml').value = out;
+            showBuildStatus('빌드 완료 &nbsp;·&nbsp; 앞 페이지 순서 따라가기 &nbsp;·&nbsp; 표 <b>' + LK4.rows + '행 × ' + LK4.cols + '열</b>'
+                + ' &nbsp;·&nbsp; 보기 <b>' + N + '개</b> &nbsp;·&nbsp; 페이지 <b>' + pg.join(', ') + '</b>', 'ok');
+            return true;
+        }
+
+        // ══════ CASE 2 : 열 제어 + 행 대분류 로테이션 ══════
+        let LK2 = null;
+        function switchLk2Rot(v) {
+            const r = document.querySelector('input[name="lk2Rot"][value="' + v + '"]');
+            if (r) r.checked = true;
+            ['none','group','item','both'].forEach(k => {
+                const e = document.getElementById('btn-lk2rot-' + k);
+                if (e) e.classList.toggle('preset-active', k === v);
+            });
+        }
+        function lk2Rot() {
+            const e = document.querySelector('input[name="lk2Rot"]:checked');
+            return e ? e.value : 'both';
+        }
+
+        function lk2Parse(html) {
+            const d = document.createElement('div');
+            d.innerHTML = html;
+            const tabs = [...d.querySelectorAll('table')];
+            const t = tabs.filter(x => x.querySelectorAll('input[type=radio],input[type=checkbox]').length).pop();
+            if (!t) return null;
+            const trs = [...t.querySelectorAll('tr')];
+            if (trs.length < 2) return null;
+            const head = [...trs[0].children];
+            const cols = head.length - 1;                      // 첫 칸은 '보기' 라벨
+            const body = trs.slice(1);
+            const itemRows = body.filter(tr => tr.querySelectorAll('input').length);
+            const sbsRows  = body.filter(tr => !tr.querySelectorAll('input').length);
+            const names = [];
+            for (let c = 1; c <= cols; c++) {
+                const inp = itemRows.length ? itemRows[0].children[c].querySelector('input') : null;
+                names.push(inp ? inp.name : '');
+            }
+            return { div: d, table: t, trs: trs, headTr: trs[0], head: head, cols: cols,
+                     itemRows: itemRows, sbsRows: sbsRows, names: names,
+                     colLabels: head.slice(1).map(e => e.innerHTML),
+                     rowLabels: itemRows.map(tr => tr.children[0].innerText.replace(/\s+/g,' ').trim()) };
+        }
+
+        function lk2Detect() {
+            const box = document.getElementById('lk2Detect');
+            const html = document.getElementById('inputHtml').value;
+            LK2 = null;
+            if (!box) return;
+            if (!html.trim()) { box.innerHTML = '원본을 넣으면 표 구조를 자동으로 읽습니다.'; lk2SyncGroups(); return; }
+            const p = lk2Parse(html);
+            if (!p) { box.innerHTML = '<b style="color:var(--danger)">라디오·체크박스가 있는 표를 찾지 못했습니다.</b>'; lk2SyncGroups(); return; }
+            LK2 = p;
+            let h = '문항표 : 열 <b>' + p.cols + '개</b> · 보기 <b>' + p.itemRows.length + '개</b><br>';
+            h += '열 문항 ID : <b>' + p.names.join(', ') + '</b><br>';
+            h += '열 이름 : ' + p.head.slice(1).map(e => e.innerText.replace(/\s+/g,' ').trim()).join(' · ');
+            if (p.sbsRows.length) h += '<br><span style="color:var(--ink-4)">입력칸 없는 행 ' + p.sbsRows.length + '개는 <b>화살표 행</b>으로 봅니다 (원본 내용은 버립니다)</span>';
+            if (p.names.some(n => !n)) h += '<br><b style="color:var(--danger)">문항 ID를 못 읽은 열이 있습니다.</b>';
+            box.innerHTML = h;
+            lk2SyncGroups();
+        }
+
+        function addLk2Group(name, span) {
+            const c = document.getElementById('lk2Groups');
+            const d = document.createElement('div');
+            d.className = 'flex gap-2 items-center lk2-grp';
+            d.innerHTML = '<input type="text" class="inp lk2-name" style="flex:1" placeholder="대분류 이름" value="' + (name || '') + '">'
+                + '<input type="number" min="1" class="inp lk2-span" style="width:90px" placeholder="행 수" value="' + (span || '') + '" oninput="lk2UpdateSum()">'
+                + '<button type="button" onclick="this.parentElement.remove(); lk2UpdateSum();" class="btn btn-sm btn-ghost">삭제</button>';
+            c.appendChild(d);
+            lk2UpdateSum();
+        }
+        function lk2SyncGroups() {
+            const c = document.getElementById('lk2Groups');
+            if (c && !c.children.length && LK2) {
+                addLk2Group('그룹1', LK2.itemRows.length);
+            }
+            lk2UpdateSum();
+        }
+        function lk2Groups() {
+            return [...document.querySelectorAll('#lk2Groups .lk2-grp')].map(r => ({
+                name: r.querySelector('.lk2-name').value.trim(),
+                span: parseInt(r.querySelector('.lk2-span').value) || 0
+            })).filter(g => g.span > 0);
+        }
+        function lk2UpdateSum() {
+            const g = lk2Groups();
+            const tot = g.reduce((a, x) => a + x.span, 0);
+            const s = document.getElementById('lk2Sum'); if (s) s.innerText = tot;
+            const hint = document.getElementById('lk2Hint');
+            if (!hint) return;
+            hint.className = 'text-xs font-bold';
+            if (!LK2) { hint.className = 'text-xs muted'; hint.innerText = '원본을 넣어 주세요'; return; }
+            if (tot === LK2.itemRows.length) { hint.style.color = 'var(--ok)'; hint.innerText = '보기 수와 일치 (' + tot + ')'; }
+            else { hint.style.color = 'var(--danger)'; hint.innerText = '보기 ' + LK2.itemRows.length + '개와 다릅니다'; }
         }
 
         // ══════ CASE 3 : 표 구조 자동 감지 ══════
@@ -3302,10 +4838,9 @@ html,body{margin:0;padding:0}
         function generateLikertCode() {
             try {
                 if (currentLikertCase === '3') return generateLikertCase3();
-                if (currentLikertCase === '2') {
-                    showBuildStatus('CASE 2 는 아직 준비 중입니다. CASE 1 또는 CASE 3 을 사용해 주세요.', 'error');
-                    return false;
-                }
+                if (currentLikertCase === '5') return generateLikertCase5();
+                if (currentLikertCase === '4') return generateLikertCase4();
+                if (currentLikertCase === '2') return generateLikertCase2();
                 document.getElementById('outputHtml').value = '';   // 검증 실패 시 이전 결과가 남지 않도록
 
                 const raw = document.getElementById('inputHtml').value;
@@ -3826,7 +5361,7 @@ html,body{margin:0;padding:0}
                     if (rawMin && rawMax && Number(rawMin) >= Number(rawMax))
                         vErr('최소값 <b>' + rawMin + '</b>이 최대값 <b>' + rawMax + '</b>보다 크거나 같습니다. 슬라이드 바가 움직이지 않습니다.');
                     if (!document.getElementById('slideLeftTxt').value.trim() || !document.getElementById('slideRightTxt').value.trim())
-                        vWarn('좌·우 텍스트 라벨이 비어 있어 기본 문구가 들어갑니다.');
+                        vWarn('좌·우 텍스트 라벨이 비어 있습니다. 라벨 없이 막대만 나갑니다.');
                     if (document.getElementById('slideNeedMove').checked
                         && !document.getElementById('slideJsIn').value.trim())
                         vErr('경고를 넣으려면 <b>이 문항의 검증 JS</b>도 함께 올려 주세요. '
@@ -3836,9 +5371,10 @@ html,body{margin:0;padding:0}
 
                     const sMin = document.getElementById('slideMin').value || "-50";
                     const sMax = document.getElementById('slideMax').value || "50";
-                    const sLeftTxt = document.getElementById('slideLeftTxt').value || "매우 차갑다/부정적 (-50)";
-                    const sCenterTxt = document.getElementById('slideCenterTxt').value || "중간/별 다른 감정 없음 (0)";
-                    const sRightTxt = document.getElementById('slideRightTxt').value || "매우 따뜻하다/긍정적 (50)";
+                    // 비우면 아무것도 넣지 않는다 (예시 문구가 실사에 나가는 것을 막는다)
+                    const sLeftTxt = document.getElementById('slideLeftTxt').value.trim();
+                    const sCenterTxt = document.getElementById('slideCenterTxt').value.trim();
+                    const sRightTxt = document.getElementById('slideRightTxt').value.trim();
 
                     const nameMatch = code.match(/name="([A-Z0-9]+)TS1"/i) || code.match(/name="([A-Z0-9]+)"/i);
                     if (!nameMatch) {
@@ -5376,7 +6912,7 @@ html,body{margin:0;padding:0}
                         const inputHtml = document.getElementById('inputHtml');
                         if(inputHtml) inputHtml.value = d.text;
                         autoFillTotalOptions();
-                        if(activeCategory === 'likert' && currentLikertCase === '3') lk3Detect();
+                        if(activeCategory === 'likert') { if(currentLikertCase === '3') lk3Detect(); if(currentLikertCase === '2') lk2Detect(); if(currentLikertCase === '4') lk4Detect(); if(currentLikertCase === '5') lk5Detect(); }
                         if(displaySpan) displaySpan.innerText = `업로드됨: ${file.name} (${d.enc})`;
                         if(activeCategory === 'likert') updateLikertTotal();
                     };
@@ -5384,7 +6920,59 @@ html,body{margin:0;padding:0}
                 }
             }
         });
+    
+        // 모든 선언이 끝난 뒤 소분류 2단계 화면을 만든다
+        buildSubGroups();
+        backToSub('random');
+        backToSub('likert');
+
     </script>
+    <!-- 사용 기록 (관리자) -->
+    <div id="statModal" class="hidden" onclick="if(event.target===this)closeStat()">
+        <div class="man-box" role="dialog" aria-modal="true" aria-labelledby="stTitle">
+            <div class="man-head">
+                <span class="man-num" style="background:#334155;color:#fff">기록</span>
+                <span class="man-title" id="stTitle">CASE 별 사용 기록</span>
+                <button type="button" class="btn btn-sm btn-ghost man-close" onclick="closeStat()" aria-label="닫기">닫기</button>
+            </div>
+            <div class="man-body">
+                <div id="stLock">
+                    <div class="gd-q">관리자 암호를 입력해 주세요</div>
+                    <input type="password" id="stPw" class="inp" style="max-width:260px" placeholder="암호"
+                           onkeydown="if(event.key==='Enter')stUnlock()">
+                    <div style="margin-top:10px"><button type="button" class="btn btn-sm btn-dark" onclick="stUnlock()">확인</button></div>
+                    <div id="stErr" class="hidden" style="margin-top:9px;font-size:12px;color:var(--danger);font-weight:700"></div>
+                </div>
+                <div id="stView" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 어떤 CASE 를 쓸지 안내하는 도우미 -->
+    <div id="guideModal" class="hidden" onclick="if(event.target===this)closeGuide()">
+        <div class="man-box" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
+            <div class="man-head">
+                <span class="man-num" style="background:#334155;color:#fff">?</span>
+                <span class="man-title" id="gdTitle">어떤 걸 써야 하나요</span>
+                <button type="button" class="btn btn-sm btn-ghost man-print" onclick="gdReset()">처음으로</button>
+                <button type="button" class="btn btn-sm btn-ghost man-close" onclick="closeGuide()" aria-label="닫기">닫기</button>
+            </div>
+            <div class="man-body">
+                <div class="gd-tabs">
+                    <button type="button" class="gd-tab gd-tab-on" id="gdTabAsk" onclick="gdMode('ask')">질문 따라가기</button>
+                    <button type="button" class="gd-tab" id="gdTabFind" onclick="gdMode('find')">검색</button>
+                    <button type="button" class="gd-tab" id="gdTabCmp" onclick="gdMode('cmp')">헷갈리는 것 비교</button>
+                </div>
+                <div id="gdAsk"></div>
+                <div id="gdFind" class="hidden">
+                    <input type="text" id="gdQ" class="inp" oninput="gdSearch()" placeholder="상황을 적어 보세요. 예) 브랜드를 응답한 것만 보여주고 싶어요">
+                    <div id="gdResult" style="margin-top:12px"></div>
+                </div>
+                <div id="gdCmp" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 랜덤 셀렉트 CASE 메뉴얼 팝업 -->
     <div id="manualModal" class="hidden" onclick="if(event.target===this)closeManual()">
         <div class="man-box" role="dialog" aria-modal="true" aria-labelledby="manTitle">
